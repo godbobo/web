@@ -1,11 +1,14 @@
-package com.aqzscn.www.global.model;
+package com.aqzscn.www.global.model.vo;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 错误类型及说明
  * 这个枚举类的说明信息在非GET请求时要提示用户，即设置到ReturnVo的msg属性上
  * Created by Godbobo on 2019/5/4.
  */
-public enum  ReturnMsg implements IErrorCode {
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum ReturnMsg implements IErrorCode {
 
     SUCCESS(200, "操作成功"),
     POST_FAIL(500, "添加失败"),
@@ -23,11 +26,13 @@ public enum  ReturnMsg implements IErrorCode {
         this.title = title;
     }
 
+    @Override
     public Long getCode() {
-        return code;
+        return this.code;
     }
 
+    @Override
     public String getTitle() {
-        return title;
+        return this.title;
     }
 }

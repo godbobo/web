@@ -1,4 +1,4 @@
-package com.aqzscn.www.global.model;
+package com.aqzscn.www.global.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.aqzscn.www.global.model.RequestMethod.*;
+import static com.aqzscn.www.global.model.vo.RequestMethod.*;
 
 
 /**
@@ -52,25 +52,11 @@ public class ReturnVo {
         return new ReturnVo(list, null, getErrorRequestMsg(method));
     }
 
-    // 验证失败
-    public static ReturnVo validateFail() {
+    // 其他失败信息
+    public static ReturnVo fail(ReturnError error) {
         List<IErrorCode> list = new ArrayList<>();
-        list.add(ReturnError.VALIDATE_FAILED);
-        return new ReturnVo(list, null, ReturnError.VALIDATE_FAILED.getTitle());
-    }
-
-    // 未授权
-    public static ReturnVo unAuth() {
-        List<IErrorCode> list = new ArrayList<>();
-        list.add(ReturnError.UNAUTHORIZED);
-        return new ReturnVo(list, null, ReturnError.UNAUTHORIZED.getTitle());
-    }
-
-    // 权限不足
-    public static ReturnVo noPower() {
-        List<IErrorCode> list = new ArrayList<>();
-        list.add(ReturnError.FORBIDDEN);
-        return new ReturnVo(list, null, ReturnError.FORBIDDEN.getTitle());
+        list.add(error);
+        return new ReturnVo(list, null, error.getTitle());
     }
 
     // 根据请求方法获取对应的成功提示消息

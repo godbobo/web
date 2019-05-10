@@ -1,6 +1,8 @@
 package com.aqzscn.www.global.config.handler;
 
-import com.aqzscn.www.global.model.ReturnVo;
+import com.aqzscn.www.global.model.co.AppException;
+import com.aqzscn.www.global.model.vo.ReturnError;
+import com.aqzscn.www.global.model.vo.ReturnVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,10 +21,27 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    // 捕获自定义的异常
+    @ExceptionHandler(value = AppException.class)
+    @ResponseBody
+    public ReturnVo ExceptionHandler(HttpServletRequest request, HttpServletResponse response, AppException e) {
+        logger.error(e.getMessage());
+        ReturnVo vo = null;
+        if (e.getError() != ReturnError.FAILED) { // 已经定义的异常
+            vo = ReturnVo.fail(e.getError());
+        } else { // 未定义的异常
+            vo = ReturnVo.fail(request.getMethod());
+        }
+        response.setStatus(vo.getErrors().get(0).getCode().intValue()); // 设置不同状态时的响应状态码
+        return vo;
+    }
+
+    // 捕获全局异常
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ReturnVo ExceptionHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        ReturnVo vo = ReturnVo.fail(request.getMethod());
+    public ReturnVo ExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) {
+        logger.error(e.getMessage());
+        ReturnVo vo =  ReturnVo.fail(request.getMethod());
         response.setStatus(vo.getErrors().get(0).getCode().intValue()); // 设置不同状态时的响应状态码
         return vo;
     }

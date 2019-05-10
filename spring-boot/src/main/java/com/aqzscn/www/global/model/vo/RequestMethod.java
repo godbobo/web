@@ -1,4 +1,4 @@
-package com.aqzscn.www.global.model;
+package com.aqzscn.www.global.model.vo;
 
 /**
  * http请求方法类型
