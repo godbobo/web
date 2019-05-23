@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
         logger.error(e.getMessage());
         ReturnVo vo = null;
         if (e.getError() != ReturnError.FAILED) { // 已经定义的异常
-            vo = ReturnVo.fail(e.getError());
+            vo = ReturnVo.fail(e.getError(), e.getResults()); // 目前只会发生参数校验异常，其他异常等配置过SpringSecurity后再说
         } else { // 未定义的异常
             vo = ReturnVo.fail(request.getMethod());
         }

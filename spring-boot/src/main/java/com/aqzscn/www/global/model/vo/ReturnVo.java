@@ -1,8 +1,11 @@
 package com.aqzscn.www.global.model.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +24,19 @@ import static com.aqzscn.www.global.model.vo.RequestMethod.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel
 public class ReturnVo {
 
     /* 使用 HTTP 状态码返回笼统的错误信息，在该列表中返回具体的错误信息
      * 比如登录时返回 http 400 bad request
      * 那么具体的错误信息就应该是是用户名密码格式不对或者匹配失败
      */
+    @ApiModelProperty(value = "errors", name = "错误信息列表")
     private List<IErrorCode> errors; // 错误信息
-
+    @ApiModelProperty(value = "data", name = "返回数据")
     private Object data; // 返回数据，与 errors 不共存
-
     // 一般情况下，GET请求不需要提示用户，POST/PUT/DELETE则需要提示用户
+    @ApiModelProperty(value = "msg", name = "提示信息")
     private String msg; // 提示信息
 
     /*
@@ -53,10 +58,24 @@ public class ReturnVo {
     }
 
     // 其他失败信息
-    public static ReturnVo fail(ReturnError error) {
+    public static ReturnVo fail(ReturnError error,List<ObjectError> errors) {
         List<IErrorCode> list = new ArrayList<>();
         list.add(error);
+        if (error.equals(ReturnError.VALIDATE_FAILED)){
+            list.addAll(validationResults(errors));
+        }
         return new ReturnVo(list, null, error.getTitle());
+    }
+
+    // 参数校验失败时封装错误信息列表
+    private static List<IErrorCode> validationResults(List<ObjectError> errors) {
+        List<IErrorCode> allResults = new ArrayList<>();
+        if(errors!=null){
+            for (ObjectError error: errors){
+                allResults.add(new ValidationResult(error.getDefaultMessage()));
+            }
+        }
+        return allResults;
     }
 
     // 根据请求方法获取对应的成功提示消息
