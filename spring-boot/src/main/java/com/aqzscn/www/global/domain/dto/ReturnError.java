@@ -1,4 +1,4 @@
-package com.aqzscn.www.global.model.vo;
+package com.aqzscn.www.global.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

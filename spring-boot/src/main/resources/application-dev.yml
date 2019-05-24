@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/bobo?serverTimezone=UTC
+    username: root
+    password: root

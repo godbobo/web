@@ -1,4 +1,4 @@
-package com.aqzscn.www.global.domain.validation;
+package com.aqzscn.www.global.config.validation;
 
 /**
  * Created by Godbobo on 2019/5/14.

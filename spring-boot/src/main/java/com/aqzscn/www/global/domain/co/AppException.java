@@ -1,6 +1,6 @@
-package com.aqzscn.www.global.model.co;
+package com.aqzscn.www.global.domain.co;
 
-import com.aqzscn.www.global.model.vo.ReturnError;
+import com.aqzscn.www.global.domain.dto.ReturnError;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.validation.ObjectError;

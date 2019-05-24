@@ -1,4 +1,4 @@
-package com.aqzscn.www.global.model.vo;
+package com.aqzscn.www.global.domain.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +10,7 @@ import org.springframework.validation.ObjectError;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.aqzscn.www.global.model.vo.RequestMethod.*;
+import static com.aqzscn.www.global.domain.dto.RequestMethod.*;
 
 
 /**

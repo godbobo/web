@@ -1,4 +1,4 @@
-package com.aqzscn.www.global.model.vo;
+package com.aqzscn.www.global.domain.dto;
 
 /**
  * http请求方法类型

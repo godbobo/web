@@ -1,8 +1,8 @@
 package com.aqzscn.www.global.config.handler;
 
-import com.aqzscn.www.global.model.co.AppException;
-import com.aqzscn.www.global.model.vo.ReturnError;
-import com.aqzscn.www.global.model.vo.ReturnVo;
+import com.aqzscn.www.global.domain.co.AppException;
+import com.aqzscn.www.global.domain.dto.ReturnError;
+import com.aqzscn.www.global.domain.dto.ReturnVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;

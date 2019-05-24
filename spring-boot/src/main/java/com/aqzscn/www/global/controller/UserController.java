@@ -1,11 +1,11 @@
 package com.aqzscn.www.global.controller;
 
 import com.aqzscn.www.global.domain.User;
-import com.aqzscn.www.global.domain.validation.ValidationGroup1;
-import com.aqzscn.www.global.domain.validation.ValidationGroup2;
-import com.aqzscn.www.global.model.co.AppException;
-import com.aqzscn.www.global.model.vo.ReturnError;
-import com.aqzscn.www.global.model.vo.ReturnVo;
+import com.aqzscn.www.global.config.validation.ValidationGroup1;
+import com.aqzscn.www.global.config.validation.ValidationGroup2;
+import com.aqzscn.www.global.domain.co.AppException;
+import com.aqzscn.www.global.domain.dto.ReturnError;
+import com.aqzscn.www.global.domain.dto.ReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
