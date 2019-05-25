@@ -15,11 +15,11 @@ import java.util.Date;
 public class BlogArticle {
     private Long id;
 
-    @ApiModelProperty(value = "博文标题", required = true)
+    @ApiModelProperty(value = "博文标题")
     @NotNull(message = "{blog.article.title.notnull}", groups = {ValidationGroup1.class})
     private String title;
 
-    @ApiModelProperty(value = "博文摘要", required = true)
+    @ApiModelProperty(value = "博文摘要")
     @NotNull(message = "{blog.article.abstractTxt.notnull}", groups = {ValidationGroup1.class})
     private String abstractTxt;
 
@@ -38,7 +38,7 @@ public class BlogArticle {
     @ApiModelProperty(value = "排序")
     private Integer seriesOrder;
 
-    @ApiModelProperty(value = "正文", required = true)
+    @ApiModelProperty(value = "正文")
     @NotNull(message = "{blog.article.content.notnull}", groups = {ValidationGroup1.class})
     private String content;
 

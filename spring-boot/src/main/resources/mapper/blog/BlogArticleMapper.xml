@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.blog.mapper.BlogArticleMapper">
+  <!--基础字段类型集合-->
+  <resultMap id="BaseResultMap" type="com.aqzscn.www.blog.mapper.BlogArticle">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="abstract_txt" jdbcType="VARCHAR" property="abstractTxt" />
+    <result column="abstract_img" jdbcType="VARCHAR" property="abstractImg" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="view_num" jdbcType="BIGINT" property="viewNum" />
+    <result column="series" jdbcType="BIGINT" property="series" />
+    <result column="series_order" jdbcType="INTEGER" property="seriesOrder" />
+  </resultMap>
+  <!--复杂字段类型集合-->
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.aqzscn.www.blog.mapper.BlogArticle">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <!--预定义的sql语句-->
+  <sql id="Base_Column_List">
+    id, title, abstract_txt, abstract_img, update_time, view_num, series, series_order
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <!--对应Mapper中的方法-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog_article
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="select" parameterType="com.aqzscn.www.blog.domain.vo.ArticleRequest" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog_article
+    where 1 = 1
+    <if test="title != null">
+    and title like concat('%',#{title},'%')
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from blog_article
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
+    insert into blog_article (id, title, abstract_txt, 
+      abstract_img, update_time, view_num, 
+      series, series_order, content
+      )
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{abstractTxt,jdbcType=VARCHAR}, 
+      #{abstractImg,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{viewNum,jdbcType=BIGINT}, 
+      #{series,jdbcType=BIGINT}, #{seriesOrder,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
+    insert into blog_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="abstractTxt != null">
+        abstract_txt,
+      </if>
+      <if test="abstractImg != null">
+        abstract_img,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="viewNum != null">
+        view_num,
+      </if>
+      <if test="series != null">
+        series,
+      </if>
+      <if test="seriesOrder != null">
+        series_order,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="abstractTxt != null">
+        #{abstractTxt,jdbcType=VARCHAR},
+      </if>
+      <if test="abstractImg != null">
+        #{abstractImg,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewNum != null">
+        #{viewNum,jdbcType=BIGINT},
+      </if>
+      <if test="series != null">
+        #{series,jdbcType=BIGINT},
+      </if>
+      <if test="seriesOrder != null">
+        #{seriesOrder,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
+    update blog_article
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="abstractTxt != null">
+        abstract_txt = #{abstractTxt,jdbcType=VARCHAR},
+      </if>
+      <if test="abstractImg != null">
+        abstract_img = #{abstractImg,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewNum != null">
+        view_num = #{viewNum,jdbcType=BIGINT},
+      </if>
+      <if test="series != null">
+        series = #{series,jdbcType=BIGINT},
+      </if>
+      <if test="seriesOrder != null">
+        series_order = #{seriesOrder,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
+    update blog_article
+    set title = #{title,jdbcType=VARCHAR},
+      abstract_txt = #{abstractTxt,jdbcType=VARCHAR},
+      abstract_img = #{abstractImg,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      view_num = #{viewNum,jdbcType=BIGINT},
+      series = #{series,jdbcType=BIGINT},
+      series_order = #{seriesOrder,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
+    update blog_article
+    set title = #{title,jdbcType=VARCHAR},
+      abstract_txt = #{abstractTxt,jdbcType=VARCHAR},
+      abstract_img = #{abstractImg,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      view_num = #{viewNum,jdbcType=BIGINT},
+      series = #{series,jdbcType=BIGINT},
+      series_order = #{seriesOrder,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

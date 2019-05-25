@@ -9,3 +9,13 @@ server:
     key-store: bobo.p12
     key-alias: bobossl
     key-store-password: songyanan521
+pagehelper:
+#  dialect: mysql 高版本可以自动识别，不需要配置方言，否则会报错
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+mybatis:
+  mapper-locations:
+    - classpath:mapper/blog/*.xml
+    - classpath:mapper/global/*.xml
+# pageHelper配置
