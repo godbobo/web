@@ -1,13 +1,10 @@
 package com.aqzscn.www.blog.controller;
 
 import com.aqzscn.www.blog.domain.vo.ArticleRequest;
-import com.aqzscn.www.blog.mapper.BlogArticle;
 import com.aqzscn.www.blog.service.BlogArticleService;
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
-import com.aqzscn.www.global.config.validation.ValidationGroup2;
 import com.aqzscn.www.global.controller.BaseController;
 import com.aqzscn.www.global.domain.co.AppException;
-import com.aqzscn.www.global.domain.dto.PageRequest;
 import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import io.swagger.annotations.Api;
@@ -40,11 +37,11 @@ public class BlogArticleController extends BaseController {
 
     @PostMapping("/articles")
     @ApiOperation("新增文章")
-    public ReturnVo addArticles(@Validated(ValidationGroup1.class) BlogArticle article, BindingResult result) throws RuntimeException {
+    public ReturnVo addArticles(@Validated(ValidationGroup1.class) @RequestBody ArticleRequest articleRequest, BindingResult result) throws RuntimeException {
         if (result.hasErrors()) {
             throw AppException.of(result.getAllErrors());
         }
-        return response(articleService.addArticles(article));
+        return response(articleService.addArticles(articleRequest));
     }
 
     @DeleteMapping("/articles/{id}")

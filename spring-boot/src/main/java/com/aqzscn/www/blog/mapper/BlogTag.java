@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -16,15 +16,15 @@ public class BlogTag {
     private Long id;
 
     @ApiModelProperty(value = "标签名", required = true)
-    @NotNull(message = "{blog.tag.title.notnull}", groups = {ValidationGroup1.class})
+    @NotBlank(message = "{blog.tag.title.notblank}", groups = {ValidationGroup1.class})
     private String title;
 
     @ApiModelProperty(value = "字体颜色", required = true)
-    @NotNull(message = "{blog.tag.color.notnull}", groups = {ValidationGroup1.class})
+    @NotBlank(message = "{blog.tag.color.notblank}", groups = {ValidationGroup1.class})
     private String color;
 
     @ApiModelProperty(value = "背景颜色", required = true)
-    @NotNull(message = "{blog.tag.bg.notnull}", groups = {ValidationGroup1.class})
+    @NotBlank(message = "{blog.tag.bg.notblank}", groups = {ValidationGroup1.class})
     private String bg;
 
 }

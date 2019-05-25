@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 public interface BlogArticleMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(BlogArticle record);
+    int insert(ArticleRequest record);
 
     int insertSelective(BlogArticle record);
 
     BlogArticle selectByPrimaryKey(Long id);
+
+    BlogArticle selectByTimeAndTitle(BlogArticle record);
 
     Page<BlogArticle> select(ArticleRequest articleRequest);
 
@@ -23,4 +25,14 @@ public interface BlogArticleMapper {
     int updateByPrimaryKeyWithBLOBs(BlogArticle record);
 
     int updateByPrimaryKey(BlogArticle record);
+
+    /**
+     * 与标签关联的操作
+     */
+    int insertTag(Long articleId, Long tagId);
+
+    /**
+     * 与连载关联的操作
+     */
+    BlogArticle selectLastInSeries(Long seriesId);
 }

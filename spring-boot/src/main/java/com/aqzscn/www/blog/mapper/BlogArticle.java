@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Getter
@@ -16,11 +16,10 @@ public class BlogArticle {
     private Long id;
 
     @ApiModelProperty(value = "博文标题")
-    @NotNull(message = "{blog.article.title.notnull}", groups = {ValidationGroup1.class})
+    @NotBlank(message = "{blog.article.title.notblank}", groups = {ValidationGroup1.class})
     private String title;
 
     @ApiModelProperty(value = "博文摘要")
-    @NotNull(message = "{blog.article.abstractTxt.notnull}", groups = {ValidationGroup1.class})
     private String abstractTxt;
 
     @ApiModelProperty(value = "博文配图")
@@ -39,7 +38,7 @@ public class BlogArticle {
     private Integer seriesOrder;
 
     @ApiModelProperty(value = "正文")
-    @NotNull(message = "{blog.article.content.notnull}", groups = {ValidationGroup1.class})
+    @NotBlank(message = "{blog.article.content.notblank}", groups = {ValidationGroup1.class})
     private String content;
 
 }

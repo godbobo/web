@@ -57,12 +57,8 @@ public class BlogTagController extends BaseController {
     @GetMapping("/tags")
     @ApiOperation("获取全部标签")
     public ReturnVo getAllTags() throws RuntimeException {
-        List<BlogTag> tagList = this.tagService.selectAll();
-        if (tagList == null || tagList.size() == 0) {
-            return response(false);
-        }
         ReturnVo returnVo = new ReturnVo();
-        returnVo.setData(tagList);
+        returnVo.setData(this.tagService.selectAll());
         return returnVo;
     }
 

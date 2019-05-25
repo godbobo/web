@@ -17,12 +17,8 @@
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <!--预定义的sql语句-->
-  <sql id="Base_Column_List">
-    id, title, abstract_txt, abstract_img, update_time, view_num, series, series_order
-  </sql>
-  <sql id="Blob_Column_List">
-    content
-  </sql>
+  <sql id="Base_Column_List">id, title, abstract_txt, abstract_img, update_time, view_num, series, series_order</sql>
+  <sql id="Blob_Column_List">content</sql>
   <!--对应Mapper中的方法-->
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
@@ -42,6 +38,10 @@
     <if test="title != null">
     and title like concat('%',#{title},'%')
     </if>
+  </select>
+  <!--查询刚刚添加的博文，用更新时间和标题确保找到的不是别人添加的-->
+  <select id="selectByTimeAndTitle" parameterType="com.aqzscn.www.blog.mapper.BlogArticle" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from blog_article where title = #{title} and update_time = #{updateTime, jdbcType=TIMESTAMP}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from blog_article
@@ -171,4 +171,11 @@
       series_order = #{seriesOrder,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!--标签关联表相关操作-->
+  <!--与标签建立关联-->
+  <insert id="insertTag">insert into blog_tags_map (tag_id, article_id) values (#{tagId}, #{articleId})</insert>
+  <!--连载相关操作-->
+  <!--获取在某个连载中排序最高的博文-->
+  <select id="selectLastInSeries" resultMap="BaseResultMap">select id, title, series_order from blog_article where series = #{seriesId} order by series_order desc limit 1</select>
 </mapper>
