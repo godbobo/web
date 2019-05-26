@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 /**
  * 错误类型及说明
  * 这个枚举类的说明信息无论什么类型的请求均要提示用户，即设置到ReturnVo的msg属性上
- * Created by Godbobo on 2019/5/4.
+ *
+ * @author Godbobo
+ * @date 2019/5/4.
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ReturnError implements IErrorCode {

@@ -19,7 +19,8 @@ import static com.aqzscn.www.global.domain.dto.RequestMethod.*;
  * 如果大于等于200小于300即为请求成功，将data中的数据继续传递给下一级处理
  * 请求失败则将errors中的错误信息传递给下一级，由下一级决定要自动处理还是提示用户
  * 如果提示信息存在，则将提示内容显示给用户，否则不显示
- * Created by Godbobo on 2019/5/4.
+ * @author Godbobo
+ * @date 2019/5/4.
  */
 @Data
 @AllArgsConstructor
@@ -32,19 +33,20 @@ public class ReturnVo {
      * 那么具体的错误信息就应该是是用户名密码格式不对或者匹配失败
      */
     @ApiModelProperty(value = "errors", name = "错误信息列表")
-    private List<IErrorCode> errors; // 错误信息
-    @ApiModelProperty(value = "data", name = "返回数据")
-    private Object data; // 返回数据，与 errors 不共存
+    private List<IErrorCode> errors;
+    @ApiModelProperty(value = "data", name = "返回数据，与 errors 不共存")
+    private Object data;
     // 一般情况下，GET请求不需要提示用户，POST/PUT/DELETE则需要提示用户
     @ApiModelProperty(value = "msg", name = "提示信息")
-    private String msg; // 提示信息
+    private String msg;
 
     /*
      * 下面提供常用的json数据
      */
     public static ReturnVo ok(String method) {
         if (method.equals(GET)) {
-            return new ReturnVo(); // 返回空的返回体，因为没有任何消息需要显示，且可以根据HTTP状态码判断是否成功
+            // 返回空的返回体，因为没有任何消息需要显示，且可以根据HTTP状态码判断是否成功
+            return new ReturnVo();
         }else {
             return new ReturnVo(null, null, getSuccessRequestMsg(method));
         }

@@ -1,11 +1,12 @@
 package com.aqzscn.www.global.controller;
 
-import com.aqzscn.www.global.domain.User;
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
 import com.aqzscn.www.global.config.validation.ValidationGroup2;
 import com.aqzscn.www.global.domain.co.AppException;
 import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
+import com.aqzscn.www.global.mapper.User;
+import com.aqzscn.www.global.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -18,22 +19,27 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * 控制用户行为
- * Created by Godbobo on 2019/5/4.
+ * 用户请求接口
+ *
+ * @author Godbobo
+ * @date 2019/5/26
  */
 @RestController
-@RequestMapping("/g/user")
+@RequestMapping("/g")
 @Api(tags = "用户数据接口")
-public class UserController {
+public class UserController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final HttpServletRequest request;
+
+    private final UserService userService;
 
     @Autowired
-    public UserController(HttpServletRequest request) {
-        this.request = request;
+    public UserController(UserService userService, HttpServletRequest request, HttpServletResponse response) {
+        super(request, response);
+        this.userService = userService;
     }
 
     @ApiOperation(value = "用户登录")
@@ -42,8 +48,7 @@ public class UserController {
         if (result.hasErrors()) {
             throw AppException.of(result.getAllErrors());
         }
-        logger.info("用户登录：" + user.getLoginName() + " - "+ user.getPassword());
-        return ReturnVo.ok(request.getMethod());
+        return response(true);
     }
 
     @ApiOperation(value = "注销登录")
@@ -53,28 +58,26 @@ public class UserController {
         if (StringUtils.isBlank(token)) {
             throw AppException.of(ReturnError.VALIDATE_FAILED);
         }
-        logger.info("删除token:" + token);
-        return ReturnVo.ok(request.getMethod());
+        return response(true);
     }
 
     @ApiOperation(value = "用户注册")
-    @PostMapping("/user")
-    public ReturnVo register(@Validated(ValidationGroup1.class) User user , BindingResult result) throws RuntimeException{
+    @PostMapping("/users")
+    public ReturnVo reg(@Validated(ValidationGroup1.class) @RequestBody User user, BindingResult result) throws RuntimeException {
         if (result.hasErrors()) {
             throw AppException.of(result.getAllErrors());
         }
-        logger.info("用户注册：" + user.getLoginName() + " - " + user.getPassword() + " - " + user.getUsername());
-        return ReturnVo.ok(request.getMethod());
+        return response(this.userService.reg(user));
     }
 
     @ApiOperation(value = "修改用户信息")
     @PutMapping("/user")
-    public ReturnVo updateUser(@RequestBody User user) throws RuntimeException{
-        if (StringUtils.isAnyBlank(user.getLoginName(), user.getUsername(), user.getPassword())){
+    public ReturnVo updateUser(@RequestBody User user) throws RuntimeException {
+        if (StringUtils.isAnyBlank(user.getRealName(), user.getUsername(), user.getPassword())) {
             throw AppException.of(ReturnError.VALIDATE_FAILED);
         }
-        logger.info("修改用户信息：" + user.getLoginName() + " - " + user.getPassword() + " - " + user.getUsername());
-        return ReturnVo.ok(request.getMethod());
+        logger.info("修改用户信息：" + user.getRealName() + " - " + user.getPassword() + " - " + user.getUsername());
+        return response(true);
     }
 
 }

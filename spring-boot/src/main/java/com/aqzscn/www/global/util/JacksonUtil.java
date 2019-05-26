@@ -9,9 +9,16 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * Jackson工具类
+ *
+ * @author Godbobo
+ * @date 2019/05/26
+ */
 public class JacksonUtil {
 
-    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; // 时间戳转换时间格式设置
+    // 时间戳转换时间格式设置
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final ObjectMapper mapper;
 
     static {

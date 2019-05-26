@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.global.mapper.UserMapper">
+  <resultMap id="User_Result" type="com.aqzscn.www.global.mapper.User">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+    <result column="locked" jdbcType="INTEGER" property="locked" />
+    <result column="enabled" jdbcType="INTEGER" property="enabled" />
+    <result column="reg_time" jdbcType="TIMESTAMP" property="regTime" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+  </resultMap>
+  <sql id="All_Column">
+    id, real_name, password, username, gender, tel, email, head_img, locked, enabled, reg_time, sign
+  </sql>
+  <select id="loadUserByUsername" resultMap="User_Result">
+    select * from g_user where username = #{username};
+  </select>
+  <!--这种查询方式相当于每条记录对应一个表，感觉会很耗内存，后面有问题的话改一下-->
+  <select id="getRolesByUid" resultType="com.aqzscn.www.global.mapper.Role">
+    select * from g_role a, g_roles_map b where a.id = b.rid and b.uid = #{id}
+  </select>
+  <insert id="insert">
+    insert into g_user (<include refid="All_Column" />) values (#{id}, #{realName}, #{password}, #{username}, #{gender}, #{tel}, #{email}, #{headImg}, #{locked}, #{enabled}, #{regTime}, #{sign})
+  </insert>
+</mapper>

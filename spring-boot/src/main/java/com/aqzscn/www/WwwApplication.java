@@ -6,6 +6,11 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+/**
+ * 启动类
+ * @author Godbobo
+ * @date 2019/5/26
+ */
 @SpringBootApplication
 public class WwwApplication extends WebMvcConfigurationSupport {
 
@@ -15,7 +20,8 @@ public class WwwApplication extends WebMvcConfigurationSupport {
 
     @Override
     protected void configurePathMatch(PathMatchConfigurer configurer) {
-        configurer.setUseTrailingSlashMatch(true); // 设置自动后缀路径模式匹配
+        // 设置自动后缀路径模式匹配
+        configurer.setUseTrailingSlashMatch(true);
     }
 
     /**

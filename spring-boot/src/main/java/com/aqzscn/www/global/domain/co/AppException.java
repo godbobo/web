@@ -8,7 +8,10 @@ import org.springframework.validation.ObjectError;
 import java.util.List;
 
 /**
- * Created by Godbobo on 2019/5/10.
+ * 全局异常类
+ *
+ * @author Godbobo
+ * @date 2019/5/10.
  */
 @Getter
 public class AppException extends RuntimeException {
