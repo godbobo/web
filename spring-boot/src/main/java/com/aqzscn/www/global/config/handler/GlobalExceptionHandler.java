@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 统一处理异常
- * Created by Godbobo on 2019/5/8.
+ * @author Godbobo
+ * @date 2019/5/8.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,25 +25,30 @@ public class GlobalExceptionHandler {
     // 捕获自定义的异常
     @ExceptionHandler(value = AppException.class)
     @ResponseBody
-    public ReturnVo ExceptionHandler(HttpServletRequest request, HttpServletResponse response, AppException e) {
+    public ReturnVo exceptionHandler(HttpServletRequest request, HttpServletResponse response, AppException e) {
         logger.error(e.getMessage());
-        ReturnVo vo = null;
-        if (e.getError() != ReturnError.FAILED) { // 已经定义的异常
-            vo = ReturnVo.fail(e.getError(), e.getResults()); // 目前只会发生参数校验异常，其他异常等配置过SpringSecurity后再说
-        } else { // 未定义的异常
+        ReturnVo vo;
+        if (e.getError() != ReturnError.FAILED) {
+            // 已经定义的异常
+            // 目前只会发生参数校验异常，其他异常等配置过SpringSecurity后再说
+            vo = ReturnVo.fail(e.getError(), e.getResults());
+        } else {
+            // 未定义的异常
             vo = ReturnVo.fail(request.getMethod());
         }
-        response.setStatus(vo.getErrors().get(0).getCode().intValue()); // 设置不同状态时的响应状态码
+        // 设置不同状态时的响应状态码
+        response.setStatus(vo.getErrors().get(0).getCode().intValue());
         return vo;
     }
 
     // 捕获全局异常
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ReturnVo ExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) {
+    public ReturnVo exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) {
         logger.error(e.getMessage());
         ReturnVo vo =  ReturnVo.fail(request.getMethod());
-        response.setStatus(vo.getErrors().get(0).getCode().intValue()); // 设置不同状态时的响应状态码
+        // 设置不同状态时的响应状态码
+        response.setStatus(vo.getErrors().get(0).getCode().intValue());
         return vo;
     }
 
