@@ -1,7 +1,6 @@
 package com.aqzscn.www.global.config.security;
 
 import com.aqzscn.www.global.domain.dto.IErrorCode;
-import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.domain.dto.ValidationResult;
 import com.aqzscn.www.global.service.impl.UserServiceImpl;
@@ -10,27 +9,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.AccessDeniedHandler;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户认证配置
+ *
+ * 这里的配置高于授权服务和资源服务的配置 即所有配置先经过这里再去另外两个配置
  *
  * @author Godbobo
  * @date 2019/5/26
@@ -45,6 +39,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    @Override
+    protected UserDetailsService userDetailsService() {
+        return super.userDetailsService();
+    }
+
     /**
      * 配置密码编码器
      * NoOpPasswordEncoder 不对密码加密，NoOpPasswordEncoder.getInstance()可新建实例
@@ -52,12 +58,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 一般会在用户注册时通过BCryptPasswordEncoder.encode()得到加密的密码后存到数据库
      * 登录时用户输入明文密码，用下面方法配置的密码加密器加密后与数据库中的加密过的密码进行比较
      *
+     * 在配置授权服务时，不能同时有两个编码器在SpringSecurity的容器中，因此注释掉当前的编码器
+     *
      * @return 编码器
      */
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
+//    @Bean
+//    PasswordEncoder passwordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
 
     /**
      * 配置用户信息
@@ -78,39 +86,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/g/**")
-                .hasRole("ADMIN")
-                .antMatchers("/blog/**")
-                .access("hasAnyRole('ADMIN', 'USER')")
-                .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
-                    // 组装返回信息
-                    List<IErrorCode> errorCodes = new ArrayList<>(1);
-                    errorCodes.add(new ValidationResult(403L,"403 Forbidden"));
-                    ReturnVo vo = new ReturnVo();
-                    vo.setErrors(errorCodes);
-                    vo.setMsg("禁止访问");
-                    // 设置响应体信息
-                    httpServletResponse.setContentType("application/json;charset=utf-8");
-                    PrintWriter out = httpServletResponse.getWriter();
-                    httpServletResponse.setStatus(403);
-                    ObjectMapper mapper = new ObjectMapper();
-                    out.write(mapper.writeValueAsString(vo));
-                    out.flush();
-                    out.close();
-                })
-                .and()
-                .formLogin()
-                .loginProcessingUrl("/login")
-                .permitAll()
-                .and()
-                .csrf()
-                .disable();
-        setLoginHandler(http);
+//        http.authorizeRequests()
+//                .antMatchers("/g/**")
+//                .hasRole("ADMIN")
+//                .antMatchers("/blog/**")
+//                .access("hasAnyRole('ADMIN', 'USER')")
+//                .anyRequest()
+//                .authenticated()
+//                .and()
+//                .exceptionHandling()
+//                .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
+//                    // 组装返回信息
+//                    List<IErrorCode> errorCodes = new ArrayList<>(1);
+//                    errorCodes.add(new ValidationResult(403L,"403 Forbidden"));
+//                    ReturnVo vo = new ReturnVo();
+//                    vo.setErrors(errorCodes);
+//                    vo.setMsg("禁止访问");
+//                    // 设置响应体信息
+//                    httpServletResponse.setContentType("application/json;charset=utf-8");
+//                    PrintWriter out = httpServletResponse.getWriter();
+//                    httpServletResponse.setStatus(403);
+//                    ObjectMapper mapper = new ObjectMapper();
+//                    out.write(mapper.writeValueAsString(vo));
+//                    out.flush();
+//                    out.close();
+//                })
+//                .and()
+//                .formLogin()
+//                .loginProcessingUrl("/login")
+//                .permitAll()
+//                .and()
+//                .csrf()
+//                .disable();
+//        setLoginHandler(http);
+//        配置为Oauth验证后，思路就变为在这里允许授权的请求通过，而在资源服务那里再配置具体的资源权限
+        http.antMatcher("/oauth/**").authorizeRequests()
+                .antMatchers("/oauth/**").permitAll()
+                .and().csrf().disable();
     }
 
 

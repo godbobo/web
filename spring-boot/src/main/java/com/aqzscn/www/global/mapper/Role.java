@@ -4,15 +4,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 /**
  * 角色实体类
+ *
+ * 该类必须实现Serializable接口，否则授权服务在反序列化该类时就会产生异常
  *
  * @author Godbobo
  * @date 2019/5/26
  */
 @ApiModel("角色实体类")
-public class Role {
+public class Role implements Serializable {
     @ApiModelProperty("主键")
     private Long id;
 

@@ -39,6 +39,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.3.3.RELEASE</version>
+            <!--这个版本号一定要对应，否则可能找不到需要继承的类-->
+        </dependency>
         <!--swagger-->
         <dependency>
             <groupId>io.springfox</groupId>
