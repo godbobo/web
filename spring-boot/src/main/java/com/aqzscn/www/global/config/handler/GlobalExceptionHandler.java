@@ -1,8 +1,11 @@
 package com.aqzscn.www.global.config.handler;
 
 import com.aqzscn.www.global.domain.co.AppException;
+import com.aqzscn.www.global.domain.dto.IErrorCode;
 import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
+import com.aqzscn.www.global.domain.dto.ValidationResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,16 +29,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = AppException.class)
     @ResponseBody
     public ReturnVo exceptionHandler(HttpServletRequest request, HttpServletResponse response, AppException e) {
-        logger.error(e.getMessage());
         ReturnVo vo;
         if (e.getError() != ReturnError.FAILED) {
             // 已经定义的异常
-            // 目前只会发生参数校验异常，其他异常等配置过SpringSecurity后再说
             vo = ReturnVo.fail(e.getError(), e.getResults());
         } else {
             // 未定义的异常
             vo = ReturnVo.fail(request.getMethod());
         }
+        StringBuilder eStr = new StringBuilder("发生异常：");
+        for(IErrorCode ie: vo.getErrors()){
+            eStr.append(ie.getTitle()).append(",");
+        }
+        logger.error(eStr.substring(0, eStr.length() - 1));
         // 设置不同状态时的响应状态码
         response.setStatus(vo.getErrors().get(0).getCode().intValue());
         return vo;
@@ -47,6 +53,7 @@ public class GlobalExceptionHandler {
     public ReturnVo exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) {
         logger.error(e.getMessage());
         ReturnVo vo =  ReturnVo.fail(request.getMethod());
+        vo.getErrors().add(new ValidationResult(500L, e.getMessage()));
         // 设置不同状态时的响应状态码
         response.setStatus(vo.getErrors().get(0).getCode().intValue());
         return vo;

@@ -1,7 +1,6 @@
 package com.aqzscn.www.global.controller;
 
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
-import com.aqzscn.www.global.config.validation.ValidationGroup2;
 import com.aqzscn.www.global.domain.co.AppException;
 import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
@@ -42,15 +41,6 @@ public class UserController extends BaseController {
         this.userService = userService;
     }
 
-    @ApiOperation(value = "用户登录")
-    @GetMapping("/token")
-    public ReturnVo login(@Validated(ValidationGroup2.class) User user, BindingResult result) throws RuntimeException {
-        if (result.hasErrors()) {
-            throw AppException.of(result.getAllErrors());
-        }
-        return response(true);
-    }
-
     @ApiOperation(value = "注销登录")
     @ApiImplicitParam(paramType = "query", name = "token", value = "token", required = true)
     @DeleteMapping("/token")
@@ -67,17 +57,27 @@ public class UserController extends BaseController {
         if (result.hasErrors()) {
             throw AppException.of(result.getAllErrors());
         }
+        System.out.println("用户注册");
         return response(this.userService.reg(user));
     }
 
     @ApiOperation(value = "修改用户信息")
-    @PutMapping("/user")
+    @PutMapping("/users")
     public ReturnVo updateUser(@RequestBody User user) throws RuntimeException {
         if (StringUtils.isAnyBlank(user.getRealName(), user.getUsername(), user.getPassword())) {
             throw AppException.of(ReturnError.VALIDATE_FAILED);
         }
         logger.info("修改用户信息：" + user.getRealName() + " - " + user.getPassword() + " - " + user.getUsername());
         return response(true);
+    }
+
+    @ApiOperation("激活用户的操作）")
+    @PutMapping("/access")
+    public ReturnVo active(String code, String username) {
+        // 在Oauth授权中，没有激活就没办法登录，也就没办法直接使用修改用户信息的接口，因此新增一个接口暴露给未登录用户
+        // 把激活用户换一个说法就是修改用户的访问权限 算是勉强符合Restful API的规范把
+
+        return null;
     }
 
 }

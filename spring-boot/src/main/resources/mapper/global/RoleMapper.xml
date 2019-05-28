@@ -4,4 +4,7 @@
   <insert id="insert" parameterType="com.aqzscn.www.global.mapper.Role">
     insert into g_role (id, name, remark) values (#{id}, #{name}, #{remark})
   </insert>
+    <select id="selectAll" resultType="com.aqzscn.www.global.mapper.Role">
+      select id, name from g_role
+    </select>
 </mapper>

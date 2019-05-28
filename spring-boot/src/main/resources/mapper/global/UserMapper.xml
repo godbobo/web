@@ -18,6 +18,21 @@
   <sql id="All_Column">
     id, real_name, password, username, gender, tel, email, head_img, locked, enabled, reg_time, sign
   </sql>
+  <update id="update">
+    update g_user set
+    <if test="realName != null">real_name=#{realName}</if>
+    <if test="password != null">password=#{password}</if>
+    <if test="username != null">username=#{username}</if>
+    <if test="gender != null">gender=#{gender}</if>
+    <if test="tel != null">tel=#{tel}</if>
+    <if test="email != null">email=#{email}</if>
+    <if test="headImg != null">head_img=#{headImg}</if>
+    <if test="locked != null">locked=#{locked}</if>
+    <if test="enabled != null">enabled=#{enabled}</if>
+    <if test="regTime != null">reg_time=#{regTime}</if>
+    <if test="sign != null">sign=#{sign}</if>
+    where id=#{id}
+  </update>
   <select id="loadUserByUsername" resultMap="User_Result">
     select * from g_user where username = #{username};
   </select>
@@ -25,7 +40,10 @@
   <select id="getRolesByUid" resultType="com.aqzscn.www.global.mapper.Role">
     select * from g_role a, g_roles_map b where a.id = b.rid and b.uid = #{id}
   </select>
-  <insert id="insert">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
     insert into g_user (<include refid="All_Column" />) values (#{id}, #{realName}, #{password}, #{username}, #{gender}, #{tel}, #{email}, #{headImg}, #{locked}, #{enabled}, #{regTime}, #{sign})
+  </insert>
+  <insert id="setRoles">
+    insert into g_roles_map (uid, rid) values (#{uid}, #{rid})
   </insert>
 </mapper>

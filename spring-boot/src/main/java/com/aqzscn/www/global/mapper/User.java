@@ -1,5 +1,6 @@
 package com.aqzscn.www.global.mapper;
 
+import com.aqzscn.www.global.config.validation.ValidationGroup1;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -29,11 +31,11 @@ public class User implements UserDetails {
     private Long id;
 
     @ApiModelProperty("姓名")
-    @NotBlank(message = "{user.realName.notblank}")
+    @NotBlank(message = "{user.realName.notblank}", groups = {ValidationGroup1.class})
     private String realName;
 
     @ApiModelProperty("密码")
-    @NotBlank(message = "{user.password.notblank}")
+    @NotBlank(message = "{user.password.notblank}", groups = {ValidationGroup1.class})
     private String password;
 
     @ApiModelProperty("用户名")
@@ -41,15 +43,15 @@ public class User implements UserDetails {
     private String username;
 
     @ApiModelProperty("性别")
-    @NotBlank(message = "{user.gender.notblank}")
+    @NotNull(message = "{user.gender.notnull}", groups = {ValidationGroup1.class})
     private Integer gender;
 
     @ApiModelProperty("电话")
     private String tel;
 
     @ApiModelProperty("邮箱")
-    @NotBlank(message = "{user.email.notblank}")
-    @Email(message = "{user.email.email}")
+    @NotBlank(message = "{user.email.notblank}", groups = {ValidationGroup1.class})
+    @Email(message = "{user.email.email}", groups = {ValidationGroup1.class})
     private String email;
 
     @ApiModelProperty("头像")

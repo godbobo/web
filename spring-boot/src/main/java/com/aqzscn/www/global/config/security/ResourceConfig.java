@@ -5,21 +5,13 @@ import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.domain.dto.ValidationResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +72,16 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        // 通过指定请求方式实现对接口的更精细配置 这里配置的是向外暴露用户注册接口及SwaggerUI
+        // 1 暴露注册接口
+        // 2 暴露SwaggerUI接口
+        // 3 暴露激活接口
         http.authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/g/users").permitAll()
+                .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
+                        "/swagger-resources","/swagger-resources/configuration/security",
+                        "/swagger-ui.html","/course/coursebase/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/g/access").permitAll()
                 .antMatchers("/g/**").hasRole("ADMIN")
                 .antMatchers("/blog/**").hasRole("USER")
                 .anyRequest().authenticated();

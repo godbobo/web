@@ -3,6 +3,8 @@ package com.aqzscn.www.global.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 角色数据接口
  *
@@ -19,5 +21,12 @@ public interface RoleMapper {
      * @return 影响行数
      */
     int insert(Role role);
+
+    /**
+     * 获取全部角色
+     *
+     * @return 角色列表
+     */
+    List<Role> selectAll();
 
 }

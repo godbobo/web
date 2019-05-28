@@ -1,20 +1,27 @@
 package com.aqzscn.www.global.config.security;
 
-import com.aqzscn.www.global.service.impl.UserServiceImpl;
+import com.aqzscn.www.global.domain.co.MyOauthException;
+import com.aqzscn.www.global.domain.dto.ReturnError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.DefaultThrowableAnalyzer;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.web.util.ThrowableAnalyzer;
 
 /**
  * 授权服务配置
@@ -48,12 +55,39 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         // 3 为刷新token提供支持
         endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory))
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
+                .userDetailsService(userDetailsService)
+                .exceptionTranslator(e -> {
+                    ThrowableAnalyzer analyzer = new DefaultThrowableAnalyzer();
+                    Throwable[] causeChain = analyzer.determineCauseChain(e);
+                    Throwable ase = analyzer.getFirstThrowableOfType(OAuth2Exception.class, causeChain);
+                    MyOauthException myOauthException;
+                    // 分类处理异常
+                    if (ase instanceof InvalidGrantException) {
+                        // 从数据库中查找当前用户的信息
+                            myOauthException = new MyOauthException(ReturnError.INVALID_GRANT);
+                    } else {
+                        e.printStackTrace();
+                        myOauthException = new MyOauthException(ReturnError.OAUTH_EXCEPTION);
+                    }
+                    // 从异常栈中获取第一个异常，判断是否是一下几种异常
+//                    public static final String INVALID_REQUEST = "invalid_request";
+//                    public static final String INVALID_CLIENT = "invalid_client";
+//                    public static final String INVALID_GRANT = "invalid_grant";
+//                    public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
+//                    public static final String UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type";
+//                    public static final String INVALID_SCOPE = "invalid_scope";
+//                    public static final String INSUFFICIENT_SCOPE = "insufficient_scope";
+//                    public static final String INVALID_TOKEN = "invalid_token";
+//                    public static final String REDIRECT_URI_MISMATCH = "redirect_uri_mismatch";
+//                    public static final String UNSUPPORTED_RESPONSE_TYPE = "unsupported_response_type";
+//                    public static final String ACCESS_DENIED = "access_denied";
+                    return new ResponseEntity<OAuth2Exception>(myOauthException, HttpStatus.FORBIDDEN);
+                });
     }
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -77,7 +111,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(1800)
                 .resourceIds("rid")
                 .scopes("all")
-                .secret("123");
+                .secret(passwordEncoder().encode("123"));
     }
 
 

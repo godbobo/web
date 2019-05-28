@@ -14,6 +14,9 @@ public enum ReturnError implements IErrorCode {
 
     FAILED(500, "操作失败"),
     VALIDATE_FAILED(400, "参数检验失败"),
+    INVALID_GRANT(401, "授权信息不合法"),
+    OAUTH_EXCEPTION(401, "授权失败"),
+    LOCKED(423, "用户被锁定，禁止登录"),
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
     FORBIDDEN(403, "没有相关权限");
     private Long code;

@@ -10,6 +10,10 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+/**
+ * @author Godbobo
+ * @date 2019/05/27
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("博文数据请求对象")

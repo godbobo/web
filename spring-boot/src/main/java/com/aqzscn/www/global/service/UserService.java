@@ -1,5 +1,6 @@
 package com.aqzscn.www.global.service;
 
+import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.mapper.User;
 
 /**
@@ -11,10 +12,21 @@ public interface UserService {
 
     /**
      * 用户注册
+     *
      * @param user 用户信息
      * @return 是否成功
      * @throws RuntimeException 运行时异常
      */
     boolean reg(User user) throws RuntimeException;
+
+    /**
+     * 激活用户
+     *
+     * @param code 邮箱验证码
+     * @param id 用户id
+     * @return 是否成功
+     * @throws RuntimeException 运行时异常
+     */
+    boolean active(String code, Long id) throws RuntimeException;
 
 }
