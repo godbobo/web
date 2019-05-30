@@ -1,19 +1,77 @@
-import Cookies from 'js-cookie'
 // cookie保存的天数
 import config from '@/config'
 import { forEach, hasOneOf, objEqual } from '@/libs/tools'
-const { title, cookieExpires, useI18n } = config
+const { title, refreshTokenExpires, useI18n } = config
 
-export const TOKEN_KEY = 'token'
+export const TOKEN_KEY = 'access_token'
+export const TOKEN_TYPE_KEY = 'access_token_type'
+export const TOKEN_EXPIRES_KEY = 'access_token_expires'
+export const REFRESH_TOKEN_KEY = 'refresh_token'
+export const REFRESH_TOKEN_EXPIRES_KEY = 'refresh_token_expires'
 
-export const setToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
+/**
+ * 设置 refresh_token 到localstorage中
+ * @param {*} token refresh_token
+ */
+export const setRefreshToken = (token, isDelete = false) => {
+  if (isDelete) {
+    localStorage.removeItem(REFRESH_TOKEN_EXPIRES_KEY)
+    localStorage.removeItem(REFRESH_TOKEN_KEY)
+    localStorage.removeItem(REFRESH_TOKEN_EXPIRES_KEY)
+    return
+  }
+  localStorage.setItem(REFRESH_TOKEN_KEY, token)
+  // 计算过期后的时间 提供100秒的容错时间
+  const now = new Date()
+  const exp = now.getTime() + (refreshTokenExpires - 100) * 1000
+  localStorage.setItem(REFRESH_TOKEN_EXPIRES_KEY, Date.parse(new Date(exp)))
 }
 
+/**
+ * 从localstorage获取refresh_token
+ */
+export const getRefreshToken = () => {
+  const token = localStorage.getItem(REFRESH_TOKEN_KEY)
+  const expires = localStorage.getItem(REFRESH_TOKEN_EXPIRES_KEY)
+  if (token && expires) {
+    return { token, expires }
+  } else {
+    return false
+  }
+}
+
+/**
+ * 设置 access_token 到localstorage中
+ * @param {*} token access_token
+ * @param {*} expires 过期时间
+ */
+export const setToken = (token, expires, type, isDelete = false) => {
+  if (isDelete) {
+    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(TOKEN_TYPE_KEY)
+    localStorage.removeItem(TOKEN_EXPIRES_KEY)
+    return
+  }
+  localStorage.setItem(TOKEN_KEY, token)
+  localStorage.setItem(TOKEN_TYPE_KEY, type)
+  // 计算过期后的时间 提供100秒的容错时间
+  const now = new Date()
+  const exp = now.getTime() + (expires - 100) * 1000
+  localStorage.setItem(TOKEN_EXPIRES_KEY, Date.parse(new Date(exp)))
+}
+
+/**
+ * 从localstorage中获取token及类型
+ */
 export const getToken = () => {
-  const token = Cookies.get(TOKEN_KEY)
-  if (token) return token
-  else return false
+  const token = localStorage.getItem(TOKEN_KEY)
+  const type = localStorage.getItem(TOKEN_TYPE_KEY)
+  const expires = localStorage.getItem(TOKEN_EXPIRES_KEY)
+  if (token && type && expires) {
+    return { token, type, expires }
+  } else {
+    return false
+  }
 }
 
 export const hasChild = (item) => {

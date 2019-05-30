@@ -43,8 +43,8 @@ export default {
   data () {
     return {
       form: {
-        userName: 'super_admin',
-        password: ''
+        userName: '980742324@qq.com',
+        password: '123'
       }
     }
   },

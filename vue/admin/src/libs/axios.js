@@ -1,11 +1,12 @@
 import axios from 'axios'
 import store from '@/store'
 import { Message } from 'iview'
+import { getToken } from './util'
+import https from 'https'
 // import { Spin } from 'iview'
 
 // 用于记录错误日志
 const addErrorLog = errorInfo => {
-  console.log(errorInfo)
   const { status, request: { responseURL }, config: { method } } = errorInfo
   // 截取错误信息
   let et = ''
@@ -32,7 +33,10 @@ class HttpRequest {
       baseURL: this.baseUrl,
       headers: {
         // 'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      },
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+      })
     }
     return config
   }
@@ -49,6 +53,11 @@ class HttpRequest {
       if (!Object.keys(this.queue).length) {
         // Spin.show() // 不建议开启，因为界面不友好
       }
+      // 如果存在 token，则自动将其添加到请求头
+      const localToken = getToken()
+      if (localToken) {
+        config.headers['Authorization'] = `${localToken.type} ${localToken.token}`
+      }
       this.queue[url] = true
       return config
     }, error => {
@@ -57,13 +66,15 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.destroy(url)
-      const { data, status } = res
+      const { data } = res
+      // 如果响应中存在需要发送给用户的信息，则在这里拦截并显示
       if (data.msg) {
         Message.success({
           content: data.msg
         })
       }
-      return { data, status }
+      // 如果能找到标准结构的响应，则提取数据后返回，否则返回完整的响应内容
+      return data.data ? data.data : data
     }, error => {
       this.destroy(url)
       let errorInfo = error.response
@@ -76,7 +87,7 @@ class HttpRequest {
         }
       } else { // 存在时提示用户错误信息
         Message.error({
-          content: errorInfo.data.msg + ' 详细信息请查看日志'
+          content: errorInfo.data.msg + store.state.user.hasGetInfo ? ' 详细信息请查看日志' : ''
         })
       }
       addErrorLog(errorInfo)

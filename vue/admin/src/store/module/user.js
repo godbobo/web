@@ -1,6 +1,6 @@
 import {
   login,
-  logout,
+  refreshToken,
   getUserInfo,
   getMessage,
   getContentByMsgId,
@@ -9,14 +9,16 @@ import {
   restoreTrash,
   getUnreadCount
 } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, setRefreshToken, getRefreshToken } from '@/libs/util'
+
+// 重新设计 token
+// 1 store存储access_token  localstorage存储refresh_token
 
 export default {
   state: {
     userName: '',
     userId: '',
     avatarImgPath: '',
-    token: getToken(),
     access: '',
     hasGetInfo: false,
     unreadCount: 0,
@@ -37,10 +39,6 @@ export default {
     },
     setAccess (state, access) {
       state.access = access
-    },
-    setToken (state, token) {
-      state.token = token
-      setToken(token)
     },
     setHasGetInfo (state, status) {
       state.hasGetInfo = status
@@ -78,51 +76,70 @@ export default {
       userName = userName.trim()
       return new Promise((resolve, reject) => {
         login({
-          userName,
+          username: userName,
           password
-        }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
+        }).then(data => {
+          // 响应内容应该包括access_token,refresh_token,expires,token_type,scope
+          // 1 保存access_token
+          setToken(data.access_token, data.expires_in, data.token_type)
+          // 2 保存refresh_token
+          setRefreshToken(data.refresh_token)
           resolve()
         }).catch(err => {
           reject(err)
         })
+      })
+    },
+    // 刷新token
+    reLogin () {
+      debugger
+      const reToken = getRefreshToken()
+      // 这里只判断是否存在的原因是要定义一个线程专门去解决token是否过期的问题
+      if (!reToken) {
+        resolve(false)
+      } else if (reToken.expires < Date.parse(new Date())) {
+        // 对于有token但已经过期的 删除token 结束运行
+        setRefreshToken(null, true)
+        resolve(false)
+      }
+      return refreshToken(reToken.token).then(data => {
+        // 响应内容应该包括access_token,refresh_token,expires,token_type,scope
+        // 1 保存access_token
+        setToken(data.access_token, data.expires_in, data.token_type)
+        // 2 保存refresh_token
+        setRefreshToken(data.refresh_token)
+        resolve(true)
       })
     },
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
-          resolve()
-        }).catch(err => {
-          reject(err)
-        })
-        // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        // commit('setToken', '')
-        // commit('setAccess', [])
-        // resolve()
+        setToken(null, null, null, true)
+        setRefreshToken(null, true)
+        commit('setAccess', [])
+        resolve()
       })
     },
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvatar', data.avatar)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            resolve(data)
-          }).catch(err => {
-            reject(err)
+        getUserInfo(state.token).then(data => {
+          commit('setAvatar', data.headImg)
+          commit('setUserName', data.realName)
+          commit('setUserId', data.id)
+          // 后台中角色列表是对象 这里需要改为字符串
+          let accessLst = []
+          data.authorities.map(val => {
+            accessLst.push(val.authority)
           })
-        } catch (error) {
-          reject(error)
-        }
+          // 接受用户数据的地方同样需要用到这个改装后的数组 因此将其加入data中
+          data.access = accessLst
+          commit('setAccess', accessLst)
+          commit('setHasGetInfo', true)
+          resolve(data)
+        }).catch(err => {
+          reject(err)
+        })
       })
     },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
