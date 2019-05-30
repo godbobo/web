@@ -39,5 +39,6 @@ public class SystemInitializer implements ApplicationRunner {
         for(Role r : roles) {
             GlobalCaches.ROLES.put(r.getName(), r.getId());
         }
+        this.logger.info("初始化完成，共获取到 {} 条记录", roles.size());
     }
 }

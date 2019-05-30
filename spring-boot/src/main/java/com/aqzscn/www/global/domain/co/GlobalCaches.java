@@ -1,7 +1,7 @@
 package com.aqzscn.www.global.domain.co;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 系统缓存数据
@@ -11,6 +11,6 @@ import java.util.Map;
  */
 public class GlobalCaches {
 
-    public static Map<String, Long> ROLES = new HashMap<>();
+    public static Map<String, Long> ROLES = new ConcurrentHashMap<>();
 
 }

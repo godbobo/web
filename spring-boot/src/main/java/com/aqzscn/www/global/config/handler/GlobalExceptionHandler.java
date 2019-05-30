@@ -52,6 +52,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ReturnVo exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) {
         logger.error(e.getMessage());
+        e.printStackTrace();
         ReturnVo vo =  ReturnVo.fail(request.getMethod());
         vo.getErrors().add(new ValidationResult(500L, e.getMessage()));
         // 设置不同状态时的响应状态码

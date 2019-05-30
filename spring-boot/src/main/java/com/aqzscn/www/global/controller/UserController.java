@@ -6,6 +6,7 @@ import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.mapper.User;
 import com.aqzscn.www.global.service.UserService;
+import com.aqzscn.www.global.util.BeanRevertHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 用户请求接口
+ * 省点事，先不加注销登录的接口 让前端把token删除了就算注销
  *
  * @author Godbobo
  * @date 2019/5/26
@@ -41,14 +45,16 @@ public class UserController extends BaseController {
         this.userService = userService;
     }
 
-    @ApiOperation(value = "注销登录")
-    @ApiImplicitParam(paramType = "query", name = "token", value = "token", required = true)
-    @DeleteMapping("/token")
-    public ReturnVo logout(String token) throws RuntimeException {
-        if (StringUtils.isBlank(token)) {
-            throw AppException.of(ReturnError.VALIDATE_FAILED);
+    @ApiOperation("获取用户信息")
+    @GetMapping("/userinfo")
+    public String getUserInfo() throws RuntimeException {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails instanceof User){
+            ReturnVo vo = new ReturnVo();
+            vo.setData(userDetails);
+            return BeanRevertHelper.hideUserInfo(vo);
         }
-        return response(true);
+        return BeanRevertHelper.hideUserInfo(this.userService.getUserInfo(userDetails.getUsername()));
     }
 
     @ApiOperation(value = "用户注册")

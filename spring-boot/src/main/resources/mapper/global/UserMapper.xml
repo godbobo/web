@@ -18,6 +18,9 @@
   <sql id="All_Column">
     id, real_name, password, username, gender, tel, email, head_img, locked, enabled, reg_time, sign
   </sql>
+  <sql id="Base_Column">
+    id, real_name, username, gender, email, head_img, sign
+  </sql>
   <update id="update">
     update g_user set
     <if test="realName != null">real_name=#{realName}</if>

@@ -97,6 +97,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return false;
     }
 
+    @Override
+    public ReturnVo getUserInfo(String username) throws RuntimeException {
+        User user = this.userMapper.loadUserByUsername(username);
+        if (user == null) {
+            throw AppException.of("用户不存在");
+        }
+        user.setRoles(this.userMapper.getRolesByUid(user.getId()));
+        ReturnVo vo = new ReturnVo();
+        vo.setData(user);
+        return vo;
+    }
+
     /**
      * 为用户设置角色
      * @param uid 用户主键

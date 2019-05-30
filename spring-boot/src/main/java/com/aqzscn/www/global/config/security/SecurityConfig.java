@@ -9,17 +9,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -85,6 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 配置每个访问路径需要对应的角色
      */
+    @Order(-1)
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.authorizeRequests()
@@ -123,13 +129,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        配置为Oauth验证后，思路就变为在这里允许授权的请求通过，而在资源服务那里再配置具体的资源权限
         http.antMatcher("/oauth/**").authorizeRequests()
                 .antMatchers("/oauth/**").permitAll()
-                .and().csrf().disable();
+                .and().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         // 放行web静态资源
-        web.ignoring().antMatchers("/userlogin","/userlogout","/userjwt","/v2/api-docs", "/swagger-resources/configuration/ui",
+        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
                 "/swagger-resources","/swagger-resources/configuration/security",
                 "/swagger-ui.html","/css/**", "/js/**","/images/**", "/webjars/**", "**/favicon.ico", "/index");
     }
@@ -203,5 +210,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     httpServletResponse.sendRedirect("/login_page");
                 });
     }
+
 
 }

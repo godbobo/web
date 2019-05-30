@@ -7,7 +7,8 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by Godbobo on 2019/5/25.
+ * @author Godbobo
+ * @date 2019/5/25.
  */
 @Data
 @ApiModel("分页请求包装类")

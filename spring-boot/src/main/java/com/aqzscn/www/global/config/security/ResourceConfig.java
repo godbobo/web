@@ -82,7 +82,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/swagger-resources","/swagger-resources/configuration/security",
                         "/swagger-ui.html","/course/coursebase/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/g/access").permitAll()
-                .antMatchers("/g/**").hasRole("ADMIN")
+                .antMatchers("/g/**").access("hasAnyRole('ADMIN', 'USER')")
                 .antMatchers("/blog/**").hasRole("USER")
                 .anyRequest().authenticated();
     }

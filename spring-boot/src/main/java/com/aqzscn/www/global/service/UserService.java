@@ -29,4 +29,13 @@ public interface UserService {
      */
     boolean active(String code, Long id) throws RuntimeException;
 
+    /**
+     * 获取用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     * @throws RuntimeException 运行时异常
+     */
+    ReturnVo getUserInfo(String username) throws RuntimeException;
+
 }

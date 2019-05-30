@@ -102,13 +102,14 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // 3 配置两种授权模式，若要实现token的刷新，就需要refresh_token模式
-        // 4 配置token过期时间
+        // 4 配置token过期时间 access_token半小时 refresh_token7天
         // 5 配置资源id
         // 6 配置密钥
         clients.inMemory()
                 .withClient("password")
                 .authorizedGrantTypes("password", "refresh_token")
                 .accessTokenValiditySeconds(1800)
+                .refreshTokenValiditySeconds(604800)
                 .resourceIds("rid")
                 .scopes("all")
                 .secret(passwordEncoder().encode("123"));

@@ -13,4 +13,4 @@ logging:
   level:
     com:
       aqzscn:
-        www: debug
+        www: info
