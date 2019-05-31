@@ -1,6 +1,7 @@
 package com.aqzscn.www.blog.mapper;
 
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -9,9 +10,14 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
+/**
+ * @author Godbobo
+ * @date 2019/05/31
+ */
 @Getter
 @Setter
 @ApiModel("博文实体类")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlogArticle {
     private Long id;
 

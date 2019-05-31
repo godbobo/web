@@ -8,6 +8,10 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @author Godbobo
+ * @date 2019/05/31
+ */
 @Getter
 @Setter
 @ApiModel("博文连载")

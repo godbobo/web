@@ -1,5 +1,7 @@
 package com.aqzscn.www.global.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -58,25 +62,4 @@ public class BaseConfiguration {
         return connector;
     }
 
-    /**
-     * 配置CORS跨域请求
-     */
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        //1. 添加 CORS配置信息
-//        CorsConfiguration config = new CorsConfiguration();
-//        //放行哪些原始域
-//        config.addAllowedOrigin("*");
-//        //放行哪些请求方式
-//        config.addAllowedMethod("*");
-//        //放行哪些原始请求头部信息
-//        config.addAllowedHeader("*");
-//        //暴露哪些头部信息
-////        config.addExposedHeader("*");
-//        //2. 添加映射路径
-//        UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
-//        corsConfigurationSource.registerCorsConfiguration("/**",config);
-//        //3. 返回新的CorsFilter
-//        return new CorsFilter(corsConfigurationSource);
-//    }
 }

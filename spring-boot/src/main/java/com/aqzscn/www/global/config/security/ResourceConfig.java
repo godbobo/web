@@ -80,8 +80,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/g/users").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
                         "/swagger-resources","/swagger-resources/configuration/security",
-                        "/swagger-ui.html","/course/coursebase/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/g/access").permitAll()
+                        "/swagger-ui.html").permitAll()
                 .antMatchers("/g/**").access("hasAnyRole('ADMIN', 'USER')")
                 .antMatchers("/blog/**").hasRole("USER")
                 .anyRequest().authenticated();

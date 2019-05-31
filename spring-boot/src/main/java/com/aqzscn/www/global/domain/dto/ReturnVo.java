@@ -1,5 +1,6 @@
 package com.aqzscn.www.global.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,10 @@ import static com.aqzscn.www.global.domain.dto.RequestMethod.*;
  * 如果大于等于200小于300即为请求成功，将data中的数据继续传递给下一级处理
  * 请求失败则将errors中的错误信息传递给下一级，由下一级决定要自动处理还是提示用户
  * 如果提示信息存在，则将提示内容显示给用户，否则不显示
+ *
+ * 若要保证SpringBoot默认转换的JSON不包含null值，需要在返回的类中一个个配置@JsonInclude(JsonInclude.Include.NON_NULL)
+ * 尝试过注入HttpMessageConverter、application.yml配置等方法均不起作用，只好麻烦一点了，但毕竟能减少网络传输量，也算功德无量了
+ *
  * @author Godbobo
  * @date 2019/5/4.
  */
@@ -26,6 +31,7 @@ import static com.aqzscn.www.global.domain.dto.RequestMethod.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReturnVo {
 
     /* 使用 HTTP 状态码返回笼统的错误信息，在该列表中返回具体的错误信息

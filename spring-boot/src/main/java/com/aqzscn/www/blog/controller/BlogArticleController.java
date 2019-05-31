@@ -63,7 +63,6 @@ public class BlogArticleController extends BaseController {
     @GetMapping("/articles")
     @ApiOperation("根据条件查询文章列表")
     public ReturnVo selectLst(@Validated ArticleRequest articleRequest, BindingResult result) throws RuntimeException {
-        this.logger.info("请求查询博文列表...");
         if (result.hasErrors()) {
             throw AppException.of(result.getAllErrors());
         }

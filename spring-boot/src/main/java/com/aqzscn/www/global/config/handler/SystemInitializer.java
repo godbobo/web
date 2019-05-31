@@ -1,4 +1,4 @@
-package com.aqzscn.www.global.component;
+package com.aqzscn.www.global.config.handler;
 
 import com.aqzscn.www.global.domain.co.GlobalCaches;
 import com.aqzscn.www.global.mapper.Role;

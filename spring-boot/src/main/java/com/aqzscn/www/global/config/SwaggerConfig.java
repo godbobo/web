@@ -17,7 +17,8 @@ import java.util.function.Predicate;
 
 
 /**
- * Created by Godbobo on 2019/5/10.
+ * @author Godbobo
+ * @date 2019/5/10.
  */
 @Configuration
 @EnableSwagger2
