@@ -1,4 +1,4 @@
-package com.aqzscn.www.blog.service.imp;
+package com.aqzscn.www.blog.service.impl;
 
 import com.aqzscn.www.blog.mapper.BlogTag;
 import com.aqzscn.www.blog.mapper.BlogTagMapper;

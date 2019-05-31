@@ -5,6 +5,12 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * 博文数据库操作类
+ *
+ * @author Godbobo
+ * @date 2019/5/26
+ */
 @Mapper
 @Component
 public interface BlogArticleMapper {
@@ -12,19 +18,19 @@ public interface BlogArticleMapper {
 
     int insert(ArticleRequest record);
 
-    int insertSelective(BlogArticle record);
-
     BlogArticle selectByPrimaryKey(Long id);
 
     BlogArticle selectByTimeAndTitle(BlogArticle record);
 
+    /**
+     * 根据条件查询文章
+     * @param articleRequest 文章实体类
+     * @return 博文列表
+     */
     Page<BlogArticle> select(ArticleRequest articleRequest);
 
-    int updateByPrimaryKeySelective(BlogArticle record);
 
     int updateByPrimaryKeyWithBLOBs(BlogArticle record);
-
-    int updateByPrimaryKey(BlogArticle record);
 
     /**
      * 与标签关联的操作

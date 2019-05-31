@@ -10,6 +10,9 @@ import com.aqzscn.www.global.domain.dto.ReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 博文前端控制器
- * Created by Godbobo on 2019/5/24.
+ *
+ * @author Godbobo
+ * @date 2019/5/24.
  */
 @RestController
 @RequestMapping("/blog")
@@ -28,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 public class BlogArticleController extends BaseController {
 
     private final BlogArticleService articleService;
+    private final Logger logger = LoggerFactory.getLogger(BlogArticleController.class);
 
     @Autowired
     public BlogArticleController(BlogArticleService articleService, HttpServletRequest request, HttpServletResponse response) {
@@ -57,8 +63,12 @@ public class BlogArticleController extends BaseController {
     @GetMapping("/articles")
     @ApiOperation("根据条件查询文章列表")
     public ReturnVo selectLst(@Validated ArticleRequest articleRequest, BindingResult result) throws RuntimeException {
+        this.logger.info("请求查询博文列表...");
         if (result.hasErrors()) {
             throw AppException.of(result.getAllErrors());
+        }
+        if (StringUtils.isBlank(articleRequest.getTitle())) {
+            articleRequest.setTitle(null);
         }
         ReturnVo returnVo = new ReturnVo();
         returnVo.setData(this.articleService.select(articleRequest));

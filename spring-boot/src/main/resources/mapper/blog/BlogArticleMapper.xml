@@ -29,12 +29,11 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="select" parameterType="com.aqzscn.www.blog.domain.vo.ArticleRequest" resultMap="ResultMapWithBLOBs">
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from blog_article
-    where 1 = 1
+    select <include refid="Base_Column_List" />
+    <if test="!isBase">
+      ,<include refid="Blob_Column_List" />
+    </if>
+    from blog_article where 1=1
     <if test="title != null">
     and title like concat('%',#{title},'%')
     </if>

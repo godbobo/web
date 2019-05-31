@@ -1,4 +1,4 @@
-package com.aqzscn.www.blog.service.imp;
+package com.aqzscn.www.blog.service.impl;
 
 import com.aqzscn.www.blog.domain.vo.ArticleRequest;
 import com.aqzscn.www.blog.mapper.*;
@@ -16,18 +16,20 @@ import java.util.Date;
 
 /**
  * 博文服务
- * Created by Godbobo on 2019/5/24.
+ *
+ * @author Godbobo
+ * @date 2019/5/24.
  */
 @Service
-@Transactional
-public class BlogArticleServiceImp implements BlogArticleService {
+@Transactional(rollbackFor = Exception.class)
+public class BlogArticleServiceImpl implements BlogArticleService {
 
     private final BlogArticleMapper articleMapper;
     private final BlogSeriesMapper seriesMapper;
 
 
     @Autowired
-    public BlogArticleServiceImp(BlogArticleMapper articleMapper, BlogSeriesMapper seriesMapper) {
+    public BlogArticleServiceImpl(BlogArticleMapper articleMapper, BlogSeriesMapper seriesMapper) {
         this.articleMapper = articleMapper;
         this.seriesMapper = seriesMapper;
     }
