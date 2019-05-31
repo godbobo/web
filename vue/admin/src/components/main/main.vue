@@ -66,7 +66,8 @@ export default {
       collapsed: false,
       minLogo,
       maxLogo,
-      isFullscreen: false
+      isFullscreen: false,
+      checkTokenTask: 0
     }
   },
   computed: {
@@ -182,6 +183,39 @@ export default {
     }
     // 获取未读消息条数
     this.getUnreadMessageCount()
+    // 在这里启动和销毁定时器的原因是在用户登录后这个页面一直存在，注销后这个页面就不存在了
+    this.checkTokenTask = setInterval(() => {
+      // 设置定时器自动刷新token 因为设置的误差时间是100秒 所以这里每40秒执行一次
+      console.debug('开始检查token有效性...')
+      // 获取access_token 如果已经过期就检查refresh_token 没有过期就结束本次执行
+      const accessToken = getToken()
+      if (accessToken && parseInt(accessToken.expires) > Date.parse(new Date())) {
+        console.debug('当前时间为：', new Date(), ' token有效期为：', new Date(parseInt(accessToken.expires)))
+      } else {
+        this.$store.dispatch('reLogin').then(res => {
+          console.debug(res ? '刷新token成功' : '刷新token失败')
+          // 刷新失败应该提示用户授权过期  此时可能处于登录状态
+          if (!res) {
+            clearInterval(this.checkTokenTask)
+            this.$Modal.warning({
+              title: '提示',
+              content: '用户授权已过期，请尽快保存工作内容后重新登录，以免丢失重要内容'
+            })
+          }
+        }).catch(() => {
+          clearInterval(this.checkTokenTask)
+          // 刷新失败应该提示用户授权过期
+          this.$Modal.warning({
+            title: '提示',
+            content: '与服务器断开连接，请尽快保存工作内容后重新登录，以免丢失重要内容'
+          })
+        })
+      }
+    }, 40000)
+  },
+  beforeDestroy () {
+    clearInterval(this.checkTokenTask)
+    console.debug('清除定时器')
   }
 }
 </script>

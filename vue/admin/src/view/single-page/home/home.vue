@@ -69,9 +69,6 @@ export default {
         Sun: 1324
       }
     }
-  },
-  mounted () {
-    //
   }
 }
 </script>

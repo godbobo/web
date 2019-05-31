@@ -83,6 +83,24 @@ const getHandledValue = num => {
 }
 
 /**
+ * 将对象名填入到属性名中 适用于Java端解析对象
+ * @param {any} data 要转换的对象 属性值不允许有对象
+ * @param {String} objName 对象名
+ */
+export const convertQuery = (data, objName) => {
+  let res = {}
+  if (!data) return res
+  for (let name in data) {
+    // 过滤掉继承属性和函数属性,确保是自有属性,且没有方法(即函数类型的属性)
+    if (data.hasOwnProperty(name) && typeof data[name] !== 'function') {
+      // 将值转为字符串
+      res[`${objName}.${name}`] = data[name].toString()
+    }
+  }
+  return res
+}
+
+/**
  * @param {Number} timeStamp 传入的时间戳
  * @param {Number} startType 要返回的时间字符串的格式类型，传入'year'则返回年开头的完整时间
  */

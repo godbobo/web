@@ -55,6 +55,7 @@ class HttpRequest {
       }
       // 如果存在 token，则自动将其添加到请求头
       const localToken = getToken()
+      console.debug('请求地址为：', url, ' 携带token为：', localToken ? localToken.token : '')
       if (localToken) {
         config.headers['Authorization'] = `${localToken.type} ${localToken.token}`
       }
@@ -66,7 +67,8 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.destroy(url)
-      const { data } = res
+      const { data, status } = res
+      console.debug('从', url, '获得响应，响应码为：', status, ' 响应内容为：', JSON.stringify(data))
       // 如果响应中存在需要发送给用户的信息，则在这里拦截并显示
       if (data.msg) {
         Message.success({
@@ -78,6 +80,7 @@ class HttpRequest {
     }, error => {
       this.destroy(url)
       let errorInfo = error.response
+      console.debug('请求', url, '失败，错误信息为：', errorInfo ? JSON.stringify(errorInfo) : '')
       if (!errorInfo) {
         const { request: { statusText, status }, config } = JSON.parse(JSON.stringify(error))
         errorInfo = {

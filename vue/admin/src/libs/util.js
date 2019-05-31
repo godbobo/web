@@ -22,9 +22,9 @@ export const setRefreshToken = (token, isDelete = false) => {
   }
   localStorage.setItem(REFRESH_TOKEN_KEY, token)
   // 计算过期后的时间 提供100秒的容错时间
-  const now = new Date()
-  const exp = now.getTime() + (refreshTokenExpires - 100) * 1000
-  localStorage.setItem(REFRESH_TOKEN_EXPIRES_KEY, Date.parse(new Date(exp)))
+  const exp = new Date(new Date().getTime() + (refreshTokenExpires - 100) * 1000)
+  console.debug('refresh_tokken将于', exp, '后过期')
+  localStorage.setItem(REFRESH_TOKEN_EXPIRES_KEY, Date.parse(exp))
 }
 
 /**
@@ -55,9 +55,9 @@ export const setToken = (token, expires, type, isDelete = false) => {
   localStorage.setItem(TOKEN_KEY, token)
   localStorage.setItem(TOKEN_TYPE_KEY, type)
   // 计算过期后的时间 提供100秒的容错时间
-  const now = new Date()
-  const exp = now.getTime() + (expires - 100) * 1000
-  localStorage.setItem(TOKEN_EXPIRES_KEY, Date.parse(new Date(exp)))
+  const exp = new Date(new Date().getTime() + (expires - 100) * 1000)
+  console.debug('access_tokken将于', exp, '后过期')
+  localStorage.setItem(TOKEN_EXPIRES_KEY, Date.parse(exp))
 }
 
 /**

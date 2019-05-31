@@ -92,23 +92,28 @@ export default {
     },
     // 刷新token
     reLogin () {
-      debugger
-      const reToken = getRefreshToken()
-      // 这里只判断是否存在的原因是要定义一个线程专门去解决token是否过期的问题
-      if (!reToken) {
-        resolve(false)
-      } else if (reToken.expires < Date.parse(new Date())) {
-        // 对于有token但已经过期的 删除token 结束运行
-        setRefreshToken(null, true)
-        resolve(false)
-      }
-      return refreshToken(reToken.token).then(data => {
-        // 响应内容应该包括access_token,refresh_token,expires,token_type,scope
-        // 1 保存access_token
-        setToken(data.access_token, data.expires_in, data.token_type)
-        // 2 保存refresh_token
-        setRefreshToken(data.refresh_token)
-        resolve(true)
+      return new Promise((resolve, reject) => {
+        const reToken = getRefreshToken()
+        // 这里只判断是否存在的原因是要定义一个线程专门去解决token是否过期的问题
+        if (!reToken) {
+          resolve(false)
+        } else if (parseInt(reToken.expires) < Date.parse(new Date())) {
+          // 对于有token但已经过期的 删除token 结束运行
+          setRefreshToken(null, true)
+          resolve(false)
+        }
+        // 刷新token之前一定要确保localstorage中没有token，否则全局添加token的机制会替换掉刷新token特有的请求头
+        setToken(null, null, null, true)
+        refreshToken(reToken.token).then(data => {
+          // 响应内容应该包括access_token,refresh_token,expires,token_type,scope
+          // 1 保存access_token
+          setToken(data.access_token, data.expires_in, data.token_type)
+          // 2 保存refresh_token
+          setRefreshToken(data.refresh_token)
+          resolve(true)
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
     // 退出登录
