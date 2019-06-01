@@ -11,6 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GlobalCaches {
 
+    // 用户角色列表
     public static Map<String, Long> ROLES = new ConcurrentHashMap<>();
 
+    // 系统参数列表
+    public static Map<String, String> PARAMS = new ConcurrentHashMap<>();
 }

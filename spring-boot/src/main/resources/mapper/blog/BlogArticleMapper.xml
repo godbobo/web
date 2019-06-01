@@ -10,6 +10,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="view_num" jdbcType="BIGINT" property="viewNum" />
     <result column="series" jdbcType="BIGINT" property="series" />
+    <result column="series_name" jdbcType="VARCHAR" property="seriesName" />
     <result column="series_order" jdbcType="INTEGER" property="seriesOrder" />
   </resultMap>
   <!--复杂字段类型集合-->
@@ -28,15 +29,11 @@
     from blog_article
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="select" parameterType="com.aqzscn.www.blog.domain.vo.ArticleRequest" resultMap="ResultMapWithBLOBs">
-    select <include refid="Base_Column_List" />
-    <if test="!isBase">
-      ,<include refid="Blob_Column_List" />
-    </if>
-    from blog_article where 1=1
-    <if test="title != null">
-    and title like concat('%',#{title},'%')
-    </if>
+  <select id="select" parameterType="com.aqzscn.www.blog.domain.po.ArticleRequest" resultMap="ResultMapWithBLOBs">
+    select a.id, a.title, a.abstract_txt, a.abstract_img, a.update_time, a.view_num, a.series, a.series_order, b.name as series_name
+    <if test="!isBase"> , a.content</if>
+    from blog_article a left join blog_series b on a.series=b.id  where 1=1
+    <if test="title != null">and title like concat('%',#{title},'%')</if>
   </select>
   <!--查询刚刚添加的博文，用更新时间和标题确保找到的不是别人添加的-->
   <select id="selectByTimeAndTitle" parameterType="com.aqzscn.www.blog.mapper.BlogArticle" resultMap="BaseResultMap">

@@ -1,4 +1,4 @@
-package com.aqzscn.www.blog.domain.vo;
+package com.aqzscn.www.blog.domain.po;
 
 import com.aqzscn.www.blog.mapper.BlogArticle;
 import com.aqzscn.www.blog.mapper.BlogTag;

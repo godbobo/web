@@ -12,6 +12,11 @@ spring:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
         debug: true
+  datasource:
+    schema: classpath:datasource/schema.sql
+    data: classpath:datasource/data.sql
+    separator: $$
+    continue-on-error: true
 server:
   servlet:
     context-path: /api

@@ -13,4 +13,7 @@ logging:
   level:
     com:
       aqzscn:
-        www: info
+        www: debug
+#    org:
+#      springframework:
+#        security: debug

@@ -1,6 +1,6 @@
 package com.aqzscn.www.blog.service;
 
-import com.aqzscn.www.blog.domain.vo.ArticleRequest;
+import com.aqzscn.www.blog.domain.po.ArticleRequest;
 import com.aqzscn.www.blog.mapper.BlogArticle;
 import com.aqzscn.www.global.domain.dto.MyPage;
 

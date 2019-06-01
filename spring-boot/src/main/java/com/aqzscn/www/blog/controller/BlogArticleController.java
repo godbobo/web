@@ -1,6 +1,6 @@
 package com.aqzscn.www.blog.controller;
 
-import com.aqzscn.www.blog.domain.vo.ArticleRequest;
+import com.aqzscn.www.blog.domain.po.ArticleRequest;
 import com.aqzscn.www.blog.service.BlogArticleService;
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
 import com.aqzscn.www.global.controller.BaseController;

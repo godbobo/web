@@ -55,6 +55,7 @@ public class LogAspect {
             logger.info("耗时 {}ms STATUS: {} 返回信息: {}",endTime - startTime,status, resultData);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
+            ex.printStackTrace();
         }
         return result;
     }

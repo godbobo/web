@@ -1,6 +1,6 @@
 package com.aqzscn.www.blog.service.impl;
 
-import com.aqzscn.www.blog.domain.vo.ArticleRequest;
+import com.aqzscn.www.blog.domain.po.ArticleRequest;
 import com.aqzscn.www.blog.mapper.*;
 import com.aqzscn.www.blog.service.BlogArticleService;
 import com.aqzscn.www.global.domain.co.AppException;

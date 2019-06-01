@@ -4,8 +4,7 @@ import com.aqzscn.www.global.config.validation.ValidationGroup1;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -14,8 +13,9 @@ import java.util.Date;
  * @author Godbobo
  * @date 2019/05/31
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel("博文实体类")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlogArticle {
@@ -39,6 +39,9 @@ public class BlogArticle {
 
     @ApiModelProperty(value = "所属系列")
     private Long series;
+
+    @ApiModelProperty("连载名称")
+    private String seriesName;
 
     @ApiModelProperty(value = "排序")
     private Integer seriesOrder;

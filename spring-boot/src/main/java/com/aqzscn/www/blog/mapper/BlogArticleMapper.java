@@ -1,6 +1,7 @@
 package com.aqzscn.www.blog.mapper;
 
-import com.aqzscn.www.blog.domain.vo.ArticleRequest;
+import com.aqzscn.www.blog.domain.po.ArticleRequest;
+import com.aqzscn.www.blog.domain.vo.ArticleVo;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;

@@ -4,13 +4,19 @@ import com.aqzscn.www.global.domain.dto.IErrorCode;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.domain.dto.ValidationResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -77,12 +83,13 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         // 2 暴露SwaggerUI接口
         // 3 暴露激活接口
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/g/users").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
                         "/swagger-resources","/swagger-resources/configuration/security",
                         "/swagger-ui.html").permitAll()
-                .antMatchers("/g/**").access("hasAnyRole('ADMIN', 'USER')")
-                .antMatchers("/blog/**").hasRole("USER")
+                .antMatchers("/g/users").hasRole("USER")
+                .antMatchers("/blog/**").access("hasAnyRole('USER', 'ADMIN')")
+                .antMatchers("/g/**").access("hasAnyRole('ADMIN')")
                 .anyRequest().authenticated();
     }
+
 }
