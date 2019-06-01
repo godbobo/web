@@ -57,10 +57,7 @@
 
 <script>
 import MarkdownEditor from '_c/markdown'
-
-import { getSeries } from '@/api/series'
-import { getTags } from '@/api/tag'
-import { postArticles } from '@/api/article'
+import { mapActions } from 'vuex'
 export default {
   components: {
     MarkdownEditor
@@ -84,14 +81,16 @@ export default {
     this.getTags()
   },
   methods: {
+    ...mapActions([
+      'getTagLst', 'getSeriesLst', 'postArticle'
+    ]),
     release () { // 发表文章
       // 验证数据是否输入完整
-      // if (this.articleForm.title.trim().length === 0) {
-      //   this.$Message.error({
-      //     content: '标题不能为空'
-      //   })
-      // } else
-      if (this.articleForm.content.trim().length === 0) {
+      if (this.articleForm.title.trim().length === 0) {
+        this.$Message.error({
+          content: '标题不能为空'
+        })
+      } else if (this.articleForm.content.trim().length === 0) {
         this.$Message.error({
           content: '内容不能为空'
         })
@@ -100,27 +99,33 @@ export default {
         this.selectedTagLst.map(val => {
           this.articleForm.tagList.push({ id: val })
         })
-        postArticles(this.articleForm)
+        this.postArticle(this.articleForm).catch(error => {
+          console.error('添加文章时发生错误->', error.message)
+        })
       }
     },
     getSeries () { // 获取连载列表
-      getSeries().then(data => {
+      this.getSeriesLst().then(data => {
         // 整理返回结果
         let lst = []
-        data.data.data.map(val => {
+        data.map(val => {
           lst.push({ label: val.name, value: val.id })
         })
         this.seriesLst = lst
+      }).catch(error => {
+        console.error('获取连载列表时发生错误->', error.message)
       })
     },
     getTags () { // 获取标签列表
-      getTags().then(data => {
+      this.getTagLst().then(data => {
         // 整理返回结果
         let lst = []
-        data.data.data.map(val => {
+        data.map(val => {
           lst.push({ label: val.title, value: val.id })
         })
         this.tagLst = lst
+      }).catch(error => {
+        console.error('获取标签列表时发生错误->', error.message)
       })
     },
     resetTagAndSeries () {

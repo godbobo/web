@@ -88,18 +88,12 @@ export default {
     // 处理文章列表
     handleArticleLst () {
       this.getArticleLst(this.params).then(data => {
-        // let fLst = []
         if (data.lst) {
-          // 将结果中的时间戳转为字符串
-          // data.lst.map(val => {
-          //   val[updateTime] = getDate(val.updateTime)
-          //   fLst.push(val)
-          // })
           this.data = data.lst
         } else {
           this.data = []
         }
-      })
+      }).catch(() => {})
     }
   }
 }

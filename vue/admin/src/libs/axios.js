@@ -80,7 +80,7 @@ class HttpRequest {
     }, error => {
       this.destroy(url)
       let errorInfo = error.response
-      console.debug('请求', url, '失败，错误信息为：', errorInfo ? JSON.stringify(errorInfo) : '')
+      console.debug('请求', url, '失败，错误信息为：', errorInfo ? JSON.stringify(errorInfo.data) : '')
       if (!errorInfo) {
         const { request: { statusText, status }, config } = JSON.parse(JSON.stringify(error))
         errorInfo = {
@@ -90,7 +90,7 @@ class HttpRequest {
         }
       } else { // 存在时提示用户错误信息
         Message.error({
-          content: errorInfo.data.msg + store.state.user.hasGetInfo ? ' 详细信息请查看日志' : ''
+          content: errorInfo.data.msg
         })
       }
       addErrorLog(errorInfo)
