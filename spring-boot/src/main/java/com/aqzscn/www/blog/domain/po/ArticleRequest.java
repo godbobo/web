@@ -22,6 +22,15 @@ public class ArticleRequest extends BlogArticle {
     @ApiModelProperty("是否请求基本数据（不包括文章）")
     private boolean isBase = true;
 
+    @ApiModelProperty(",分割的主键列表")
+    private String idStr;
+
+    @ApiModelProperty("导出文件类型，可选值：sql | md")
+    private String exportType;
+
+    @ApiModelProperty("主键列表")
+    private List<String> idList;
+
     @ApiModelProperty(value = "标签列表")
     private List<BlogTag> tagList;
 

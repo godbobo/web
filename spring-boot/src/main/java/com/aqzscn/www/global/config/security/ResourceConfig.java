@@ -86,6 +86,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
                         "/swagger-resources","/swagger-resources/configuration/security",
                         "/swagger-ui.html").permitAll()
+                .antMatchers("/**/*-files").permitAll()
                 .antMatchers("/g/users").hasRole("USER")
                 .antMatchers("/blog/**").access("hasAnyRole('USER', 'ADMIN')")
                 .antMatchers("/g/**").access("hasAnyRole('ADMIN')")

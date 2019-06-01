@@ -60,6 +60,16 @@ public class BlogArticleController extends BaseController {
         return response(articleService.deleteById(id));
     }
 
+    @DeleteMapping("/articles")
+    @ApiOperation("根据主键列表批量删除文章")
+    @ApiImplicitParam(paramType = "query", name = "idStr", value = "主键列表")
+    public ReturnVo batchDeleteById(@RequestParam String idStr) throws RuntimeException {
+        if (StringUtils.isBlank(idStr)){
+            throw AppException.of(ReturnError.VALIDATE_FAILED);
+        }
+        return response(articleService.batchDeleteById(idStr));
+    }
+
     @GetMapping("/articles")
     @ApiOperation("根据条件查询文章列表")
     public ReturnVo selectLst(@Validated ArticleRequest articleRequest, BindingResult result) throws RuntimeException {
@@ -72,6 +82,16 @@ public class BlogArticleController extends BaseController {
         ReturnVo returnVo = new ReturnVo();
         returnVo.setData(this.articleService.select(articleRequest));
         return returnVo;
+    }
+
+    @GetMapping("/article-files")
+    @ApiOperation("批量导出文章列表")
+    @ApiImplicitParam(paramType = "query", name = "idStr", value = "主键列表")
+    public void exportArticles(@RequestParam String idStr) throws RuntimeException {
+        if (StringUtils.isBlank(idStr)) {
+            throw AppException.of(ReturnError.VALIDATE_FAILED);
+        }
+        articleService.exportFile(idStr);
     }
 
     @GetMapping("/articles/{id}")

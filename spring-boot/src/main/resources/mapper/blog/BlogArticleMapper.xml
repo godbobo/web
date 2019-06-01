@@ -22,18 +22,18 @@
   <sql id="Blob_Column_List">content</sql>
   <!--对应Mapper中的方法-->
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from blog_article
-    where id = #{id,jdbcType=BIGINT}
+    select <include refid="Base_Column_List" />,<include refid="Blob_Column_List" />
+    from blog_article where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="select" parameterType="com.aqzscn.www.blog.domain.po.ArticleRequest" resultMap="ResultMapWithBLOBs">
     select a.id, a.title, a.abstract_txt, a.abstract_img, a.update_time, a.view_num, a.series, a.series_order, b.name as series_name
     <if test="!isBase"> , a.content</if>
     from blog_article a left join blog_series b on a.series=b.id  where 1=1
-    <if test="title != null">and title like concat('%',#{title},'%')</if>
+    <if test="title != null">and a.title like concat('%',#{title},'%')</if>
+    <if test="idStr != null">and a.id in
+      <foreach collection="idList" item="aId" open="(" close=")" separator=",">#{aId}</foreach>
+    </if>
+    order by a.id desc
   </select>
   <!--查询刚刚添加的博文，用更新时间和标题确保找到的不是别人添加的-->
   <select id="selectByTimeAndTitle" parameterType="com.aqzscn.www.blog.mapper.BlogArticle" resultMap="BaseResultMap">
@@ -41,6 +41,10 @@
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from blog_article where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="batchDeleteById">
+    delete from blog_article where id in
+    <foreach collection="list" item="aId" open="(" close=")" separator=",">#{aId}</foreach>
   </delete>
   <insert id="insert" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
     insert into blog_article (id, title, abstract_txt, 

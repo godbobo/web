@@ -46,7 +46,9 @@ public class LogAspect {
             result = proceedingJoinPoint.proceed();
             long endTime = System.currentTimeMillis();
             String resultData;
-            if (result instanceof String) {
+            if (result == null) {
+                resultData = "";
+            }else if (result instanceof String) {
                 resultData = result.toString();
             }else {
                 resultData = jacksonUtil.toJson(result);

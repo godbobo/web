@@ -3,6 +3,7 @@ package com.aqzscn.www.blog.service.impl;
 import com.aqzscn.www.blog.domain.po.ArticleRequest;
 import com.aqzscn.www.blog.mapper.*;
 import com.aqzscn.www.blog.service.BlogArticleService;
+import com.aqzscn.www.global.component.FileService;
 import com.aqzscn.www.global.domain.co.AppException;
 import com.aqzscn.www.global.domain.dto.MyPage;
 import com.aqzscn.www.global.domain.dto.ReturnError;
@@ -12,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 博文服务
@@ -26,12 +29,14 @@ public class BlogArticleServiceImpl implements BlogArticleService {
 
     private final BlogArticleMapper articleMapper;
     private final BlogSeriesMapper seriesMapper;
+    private final FileService fileService;
 
 
     @Autowired
-    public BlogArticleServiceImpl(BlogArticleMapper articleMapper, BlogSeriesMapper seriesMapper) {
+    public BlogArticleServiceImpl(BlogArticleMapper articleMapper, BlogSeriesMapper seriesMapper, FileService fileService) {
         this.articleMapper = articleMapper;
         this.seriesMapper = seriesMapper;
+        this.fileService = fileService;
     }
 
     @Override
@@ -80,7 +85,28 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     }
 
     @Override
+    public void exportFile(String idStr) throws RuntimeException {
+        ArticleRequest articleRequest = new ArticleRequest();
+        // 设置非基本信息，否则无法输出content
+        articleRequest.setBase(false);
+        articleRequest.setIdList(Arrays.asList(idStr.split(",")));
+        List<BlogArticle> articleList = articleMapper.select(articleRequest);
+        if (articleList != null && articleList.size() > 0) {
+            // 获取第一个文章
+            BlogArticle article = articleList.get(0);
+            // 下载文件
+            fileService.downloadPlain(article.getContent(), article.getTitle(), ".md");
+        }
+    }
+
+    @Override
     public BlogArticle selectById(Long id) throws RuntimeException {
         return this.articleMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public boolean batchDeleteById(String idStr) throws RuntimeException {
+        List<String> idList = Arrays.asList(idStr.split(","));
+        return this.articleMapper.batchDeleteById(idList) > 0;
     }
 }
