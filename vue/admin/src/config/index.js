@@ -19,7 +19,7 @@ export default {
    */
   baseUrl: {
     dev: 'https://localhost:521/api/',
-    pro: 'https://produce.com'
+    pro: 'https://produce.com/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

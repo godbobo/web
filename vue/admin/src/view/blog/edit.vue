@@ -17,7 +17,7 @@
         </p>
         <div class="release-btns">
             <Button type="primary" @click="release">发布</Button>
-            <Button style="margin: 0 10px;">保存草稿</Button>
+            <Button style="margin: 0 10px;" disabled>保存草稿</Button>
             <Button>预览</Button>
           </div>
       </Card>

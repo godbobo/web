@@ -1,35 +1,59 @@
 <template>
   <Card shadow class="table-wrap">
-    <Table highlight-row :columns="tableHeaderDefine" :data="data">
-      <Page slot="footer" :total="100" show-elevator show-total />
+    <Table highlight-row :columns="tableHeaderDefine" :data="data" @on-selection-change="handleSelectionChange">
+      <div slot="header" class="table-tools-wrap">
+        <Button :disabled="!canDoBatch" class="item-margin" type="warning" icon="md-trash" @click="handleDeleteSelection">批量删除</Button>
+          <Dropdown trigger="click" @on-click="handleExportSelection">
+            <Button :disabled="!canDoBatch" class="item-margin" type="info" icon="ios-download">批量导出</Button>
+            <DropdownMenu slot="list">
+              <DropdownItem name="sql">SQL文件</DropdownItem>
+              <DropdownItem name="md">MD文件</DropdownItem>
+            </DropdownMenu>
+         </Dropdown>
+      </div>
+      <Page slot="footer" :current.sync="params.pageNum" :page-size="params.pageSize" :total="rowTotal" show-elevator show-total @on-change="handlePageChange" />
     </Table>
+    <Drawer :title="articleObj.title" placement="left" :width="50" :closable="false" v-model="drawerVisiable">
+      <md-viewer :content="articleObj.content"/>
+    </Drawer>
   </Card>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import { getRelativeTime } from '@/libs/tools'
+import MdViewer from '_c/md/viewer'
+import config from '@/config'
 
 export default {
   name: 'BlogArticlePage',
+  components: {
+    MdViewer
+  },
   data () {
     return {
       params: {
         title: '',
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
       },
+      rowTotal: 0,
       tableHeaderDefine: [
         {
+          type: 'selection',
+          width: 50,
+          align: 'center'
+        },
+        {
           type: 'index',
-          width: 60,
+          width: 50,
           align: 'center'
         }, {
           title: '标题',
           key: 'title'
         }, {
           title: '连载',
-          key: 'series'
+          key: 'seriesName'
         }, {
           title: '连载顺序',
           key: 'seriesOrder'
@@ -44,7 +68,7 @@ export default {
           }
         }, {
           title: '操作',
-          render: (h) => {
+          render: (h, params) => {
             return h('div', [
               h('Button', {
                 props: {
@@ -56,26 +80,45 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.show(params.index)
+                    this.handleViewArticle(params.row.id)
                   }
                 }
               }, '预览'),
-              h('Button', {
+              h('Poptip', {
                 props: {
-                  type: 'error',
-                  size: 'small'
+                  confirm: true,
+                  title: '确定要删除吗?'
                 },
                 on: {
-                  click: () => {
-                    this.remove(params.index)
-                  }
+                  'on-ok': () => {
+                    this.handleSingleDelete(params.row.id)
+                  },
+                  'on-cancel': () => { this.handleCancelDelete() }
                 }
-              }, '删除')
+              }, [
+                h('Button', {
+                  props: {
+                    type: 'warning',
+                    size: 'small'
+                  }
+                }, '删除')
+              ])
             ])
           }
         }
       ],
-      data: []
+      currentSelect: [],
+      data: [],
+      drawerVisiable: false,
+      articleObj: {
+        content: '',
+        title: ''
+      }
+    }
+  },
+  computed: {
+    canDoBatch () {
+      return this.currentSelect.length > 0
     }
   },
   mounted () {
@@ -83,22 +126,86 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getArticleLst'
+      'getArticleLst', 'deleteArticle', 'batchDeleteArticleLst', 'getArticle'
     ]),
     // 处理文章列表
     handleArticleLst () {
       this.getArticleLst(this.params).then(data => {
         if (data.lst) {
           this.data = data.lst
+          this.rowTotal = data.total
         } else {
           this.data = []
         }
       }).catch(() => {})
+    },
+    // 翻页
+    handlePageChange (val) {
+      this.params.pageNum = val
+      this.handleArticleLst()
+    },
+    // 选中项变化
+    handleSelectionChange (sel) {
+      this.currentSelect = sel
+    },
+    // 删除已选项目
+    handleDeleteSelection () {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '确定删除已选项目吗?',
+        onOk: () => {
+          this.batchDeleteArticleLst(this.currentSelect).then(() => {
+            this.handleArticleLst()
+          }).catch(error => {
+            console.debug(error.message)
+          })
+        }
+      })
+    },
+    // 取消删除
+    handleCancelDelete () {
+      console.debug('do nothing...')
+    },
+    // 导出已选项目
+    handleExportSelection (f) {
+      if (this.currentSelect && this.currentSelect.length > 0) {
+        let sel = ''
+        this.currentSelect.map(val => {
+          sel += val.id + ','
+        })
+        let baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+        window.location.href = baseUrl + 'blog/article-files?idStr=' + sel.substring(0, sel.length - 1)
+      } else {
+        this.$Message.warning({
+          content: '尚未选择项目'
+        })
+      }
+    },
+    // 删除单个项目
+    handleSingleDelete (val) {
+      this.deleteArticle(val).then(() => {
+        // 删除成功后刷新文章列表
+        this.handleArticleLst()
+      }).catch(error => { console.debug(error.message) })
+    },
+    // 预览文章
+    handleViewArticle (val) {
+      this.getArticle(val).then(data => {
+        this.articleObj = data
+        this.drawerVisiable = true
+      }).catch(error => {
+        console.debug(error.message)
+      })
     }
   }
 }
 </script>
 
 <style lang="less">
-
+.table-tools-wrap {
+  padding: 0 10px;
+  .item-margin {
+    margin: 0 5px;
+  }
+}
 </style>
