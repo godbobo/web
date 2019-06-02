@@ -14,6 +14,8 @@ logging:
     com:
       aqzscn:
         www: info
+myfile:
+  export: ${user.home}\mydebug\web\export
 #    org:
 #      springframework:
 #        security: debug

@@ -30,7 +30,7 @@
     <if test="!isBase"> , a.content</if>
     from blog_article a left join blog_series b on a.series=b.id  where 1=1
     <if test="title != null">and a.title like concat('%',#{title},'%')</if>
-    <if test="idStr != null">and a.id in
+    <if test="idList != null">and a.id in
       <foreach collection="idList" item="aId" open="(" close=")" separator=",">#{aId}</foreach>
     </if>
     order by a.id desc

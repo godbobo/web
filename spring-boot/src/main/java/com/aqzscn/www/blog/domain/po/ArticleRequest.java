@@ -25,6 +25,7 @@ public class ArticleRequest extends BlogArticle {
     @ApiModelProperty(",分割的主键列表")
     private String idStr;
 
+    // 目前没有用到，直接导出md文件
     @ApiModelProperty("导出文件类型，可选值：sql | md")
     private String exportType;
 

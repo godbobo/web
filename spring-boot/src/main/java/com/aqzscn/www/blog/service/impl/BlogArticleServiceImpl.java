@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -93,9 +94,16 @@ public class BlogArticleServiceImpl implements BlogArticleService {
         List<BlogArticle> articleList = articleMapper.select(articleRequest);
         if (articleList != null && articleList.size() > 0) {
             // 获取第一个文章
-            BlogArticle article = articleList.get(0);
+//            BlogArticle article = articleList.get(0);
             // 下载文件
-            fileService.downloadPlain(article.getContent(), article.getTitle(), ".md");
+//            fileService.downloadPlain(article.getContent(), article.getTitle(), ".md");
+            List<String> contentList = new ArrayList<>();
+            List<String> nameList = new ArrayList<>();
+            for(BlogArticle ba: articleList) {
+                contentList.add(ba.getContent());
+                nameList.add(ba.getTitle());
+            }
+            fileService.downloadPlains(contentList, nameList, ".md");
         }
     }
 
