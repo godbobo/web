@@ -1,3 +1,6 @@
 spring:
   datasource:
     initialization-mode: always
+server:
+  ssl:
+    enabled: true

@@ -14,8 +14,15 @@ logging:
     com:
       aqzscn:
         www: info
+server:
+  ssl:
+    enabled: false
 myfile:
   export: ${user.home}\mydebug\web\export
+  upload: D:\Environment\nginx-1.15.9\html\static\upload
+myoptions:
+  series:
+    defaultimg: https://file.iviewui.com/asd/asd-u-10.png
 #    org:
 #      springframework:
 #        security: debug
