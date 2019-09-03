@@ -1,10 +1,7 @@
 package com.aqzscn.www.global.config.handler;
 
 import com.aqzscn.www.global.domain.co.GlobalCaches;
-import com.aqzscn.www.global.mapper.Param;
-import com.aqzscn.www.global.mapper.ParamMapper;
-import com.aqzscn.www.global.mapper.Role;
-import com.aqzscn.www.global.mapper.RoleMapper;
+import com.aqzscn.www.global.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +26,13 @@ public class SystemInitializer implements ApplicationRunner {
 
     private final RoleMapper roleMapper;
     private final ParamMapper paramMapper;
+    private final DispatchMapper dispatchMapper;
 
     @Autowired
-    public SystemInitializer(RoleMapper roleMapper, ParamMapper paramMapper) {
+    public SystemInitializer(RoleMapper roleMapper, ParamMapper paramMapper, DispatchMapper dispatchMapper) {
         this.roleMapper = roleMapper;
         this.paramMapper = paramMapper;
+        this.dispatchMapper = dispatchMapper;
     }
 
     @Override
@@ -51,6 +50,18 @@ public class SystemInitializer implements ApplicationRunner {
             GlobalCaches.ROLES.put(r.getName(), r.getId());
         }
         this.logger.info("角色列表初始化完成，共获取到 {} 条记录", roles.size());
+
+
+        this.logger.info("正在初始化转发列表...");
+        List<Dispatch> dispatches = this.dispatchMapper.selectDispatch();
+        for (Dispatch d : dispatches) {
+            if (d.getEnable().equals(1)) {
+                GlobalCaches.DISPATCH = d;
+                break;
+            }
+        }
+        this.logger.info("转发列表初始化完成，共获取到 {} 条记录", dispatches.size());
+
         long endTime = System.currentTimeMillis();
         this.logger.info("系统初始化完成，共花费 {} ms", endTime - startTime);
     }

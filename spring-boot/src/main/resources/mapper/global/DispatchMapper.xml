@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.global.mapper.DispatchMapper">
+
+    <resultMap id="baseResultMap" type="com.aqzscn.www.global.mapper.Dispatch">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
+        <result column="service_url" jdbcType="VARCHAR" property="serviceUrl" />
+        <result column="req_target_param" jdbcType="VARCHAR" property="reqTargetParam" />
+        <result column="req_prefix" jdbcType="VARCHAR" property="reqPrefix" />
+        <result column="res_body" jdbcType="VARCHAR" property="resBody" />
+        <result column="res_data_key" jdbcType="VARCHAR" property="resDataKey" />
+    </resultMap>
+
+    <select id="selectDispatch" resultMap="baseResultMap">
+        select * from g_dispatch
+    </select>
+</mapper>

@@ -1,5 +1,6 @@
 package com.aqzscn.www.global.config.aspect;
 
+import com.aqzscn.www.global.domain.co.AppException;
 import com.aqzscn.www.global.util.JacksonUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,7 +25,7 @@ import java.util.Arrays;
 @Component
 public class LogAspect {
 
-    private final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+//    private final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
     private final JacksonUtil jacksonUtil = new JacksonUtil();
 
@@ -33,32 +34,32 @@ public class LogAspect {
 
     @Around(value = "log()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        // 获取切面类对应的Logger
+        Logger logger = LoggerFactory.getLogger(proceedingJoinPoint.getTarget().getClass());
         Object result = null;
-        try {
-            // 接收到请求，记录请求内容
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-            String method = request.getMethod();
-            String ip = request.getRemoteHost();
-            String url = request.getRequestURL().toString();
-            logger.info("{} {} {} 参数: {}", ip, method, url, Arrays.toString(proceedingJoinPoint.getArgs()));
-            long startTime = System.currentTimeMillis();
-            result = proceedingJoinPoint.proceed();
-            long endTime = System.currentTimeMillis();
-            String resultData;
-            if (result == null) {
-                resultData = "";
-            }else if (result instanceof String) {
-                resultData = result.toString();
-            }else {
-                resultData = jacksonUtil.toJson(result);
-            }
-            int status = attributes.getResponse().getStatus();
-            logger.info("耗时 {}ms STATUS: {} 返回信息: {}",endTime - startTime,status, resultData);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            ex.printStackTrace();
+        // 接收到请求，记录请求内容
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        String method = request.getMethod();
+        String ip = request.getRemoteHost();
+        String url = request.getRequestURL().toString();
+        logger.info("{} {} {} 参数: {}", ip, method, url, Arrays.toString(proceedingJoinPoint.getArgs()));
+        long startTime = System.currentTimeMillis();
+
+        result = proceedingJoinPoint.proceed();
+
+        // 请求处理完毕，记录响应内容
+        long endTime = System.currentTimeMillis();
+        String resultData;
+        if (result == null) {
+            resultData = "";
+        }else if (result instanceof String) {
+            resultData = result.toString();
+        }else {
+            resultData = jacksonUtil.toJson(result);
         }
+        int status = attributes.getResponse().getStatus();
+        logger.info("耗时 {}ms STATUS: {} 返回信息: {}",endTime - startTime,status, resultData);
         return result;
     }
 

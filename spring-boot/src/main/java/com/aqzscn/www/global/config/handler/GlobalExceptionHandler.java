@@ -1,11 +1,9 @@
 package com.aqzscn.www.global.config.handler;
 
 import com.aqzscn.www.global.domain.co.AppException;
-import com.aqzscn.www.global.domain.dto.IErrorCode;
 import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.domain.dto.ValidationResult;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -38,8 +36,9 @@ public class GlobalExceptionHandler {
             vo = ReturnVo.fail(request.getMethod());
         }
         StringBuilder eStr = new StringBuilder("发生异常：");
-        for(IErrorCode ie: vo.getErrors()){
-            eStr.append(ie.getTitle()).append(",");
+        eStr.append(e.getMessage()).append(",");
+        for(int i = 1; i< vo.getErrors().size(); i++){
+            eStr.append(vo.getErrors().get(i).getTitle()).append(",");
         }
         logger.error(eStr.substring(0, eStr.length() - 1));
         // 设置不同状态时的响应状态码

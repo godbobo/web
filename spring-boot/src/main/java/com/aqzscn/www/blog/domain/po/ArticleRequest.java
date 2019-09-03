@@ -19,6 +19,9 @@ import java.util.List;
 @ApiModel("博文数据请求对象")
 public class ArticleRequest extends BlogArticle {
 
+    @ApiModelProperty("查询类型：page | all | noSeries")
+    private String queryType = "page";
+
     @ApiModelProperty("是否请求基本数据（不包括文章）")
     private boolean isBase = true;
 

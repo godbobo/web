@@ -2,10 +2,16 @@ package com.aqzscn.www;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * 启动类
@@ -39,6 +45,17 @@ public class WwwApplication extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
         super.addResourceHandlers(registry);
+    }
+
+    @Bean
+    public HttpMessageConverter<String> responseBodyStringConverter(){
+        // 解决返回String时中文乱码问题
+        return new StringHttpMessageConverter(StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters){
+        converters.add(responseBodyStringConverter());
     }
 
 }

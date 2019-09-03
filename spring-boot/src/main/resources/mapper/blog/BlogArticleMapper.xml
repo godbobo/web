@@ -33,11 +33,8 @@
     <if test="idList != null">and a.id in
       <foreach collection="idList" item="aId" open="(" close=")" separator=",">#{aId}</foreach>
     </if>
+    <if test="series != null">and a.series = #{series}</if>
     order by a.id desc
-  </select>
-  <!--查询刚刚添加的博文，用更新时间和标题确保找到的不是别人添加的-->
-  <select id="selectByTimeAndTitle" parameterType="com.aqzscn.www.blog.mapper.BlogArticle" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List" /> from blog_article where title = #{title} and update_time = #{updateTime, jdbcType=TIMESTAMP}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from blog_article where id = #{id,jdbcType=BIGINT}
@@ -46,7 +43,7 @@
     delete from blog_article where id in
     <foreach collection="list" item="aId" open="(" close=")" separator=",">#{aId}</foreach>
   </delete>
-  <insert id="insert" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
+  <insert id="insert" parameterType="com.aqzscn.www.blog.mapper.BlogArticle" useGeneratedKeys="true" keyProperty="id">
     insert into blog_article (id, title, abstract_txt, 
       abstract_img, update_time, view_num, 
       series, series_order, content
@@ -57,17 +54,16 @@
       )
   </insert>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.aqzscn.www.blog.mapper.BlogArticle">
-    update blog_article
-    set title = #{title,jdbcType=VARCHAR},
-      abstract_txt = #{abstractTxt,jdbcType=VARCHAR},
-      abstract_img = #{abstractImg,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      view_num = #{viewNum,jdbcType=BIGINT},
-      series = #{series,jdbcType=BIGINT},
-      series_order = #{seriesOrder,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR}
+    update blog_article set
+    <if test="title != null">title = #{title,jdbcType=VARCHAR},</if>
+    <if test="abstractTxt != null">abstract_txt = #{abstractTxt,jdbcType=VARCHAR},</if>
+    <if test="abstractImg != null">abstract_img = #{abstractImg,jdbcType=VARCHAR},</if>
+    <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
+    <if test="viewNum != null">view_num = #{viewNum,jdbcType=BIGINT},</if>
+    <if test="content != null">content = #{content,jdbcType=LONGVARCHAR}</if>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="updateSeriesMapById">update blog_article set series=#{sId}, series_order=#{aOrder} where id=#{aId}</update>
 
   <!--标签关联表相关操作-->
   <!--与标签建立关联-->
@@ -75,4 +71,5 @@
   <!--连载相关操作-->
   <!--获取在某个连载中排序最高的博文-->
   <select id="selectLastInSeries" resultMap="BaseResultMap">select id, title, series_order from blog_article where series = #{seriesId} order by series_order desc limit 1</select>
+  <select id="selectNoSeries" resultMap="BaseResultMap">select id, title, update_time from blog_article where series is null order by id desc</select>
 </mapper>

@@ -1,13 +1,18 @@
 package com.aqzscn.www.global.component;
 
 import com.aqzscn.www.global.domain.co.AppException;
+import com.aqzscn.www.global.mapper.Resource;
+import com.aqzscn.www.global.mapper.ResourceMapper;
+import com.aqzscn.www.global.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import reactor.util.annotation.Nullable;
 
-import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
@@ -26,14 +31,23 @@ import java.util.zip.ZipOutputStream;
 public class FileService {
 
     private final HttpServletResponse response;
+    private final HttpServletRequest request;
+    private final ResourceMapper resourceMapper;
     private final Logger logger = LoggerFactory.getLogger(FileService.class);
 
     @Value("${myfile.export}")
     private String exportPath;
 
-    public FileService(HttpServletResponse response) {
+    // 上传的文件交由Nginx服务器提供访问服务
+    @Value("${myfile.upload")
+    private String uploadPath;
+
+    public FileService(HttpServletResponse response, HttpServletRequest request, ResourceMapper resourceMapper) {
         this.response = response;
+        this.request = request;
+        this.resourceMapper = resourceMapper;
     }
+
 
     /**
      * 批量下载纯文本文件
@@ -84,6 +98,43 @@ public class FileService {
         } catch (IOException e) {
             logger.error(e.getMessage());
             throw AppException.of("生成文件时发生异常");
+        }
+    }
+
+    /**
+     * 将上传的文件保存到本地
+     *
+     * @param type 上传类型
+     * @param file 文件流
+     * @return 文件信息
+     * @throws RuntimeException 运行时异常
+     */
+    @Nullable
+    public Resource uploadFile(String type, MultipartFile file) throws RuntimeException {
+        // 直接以文件类型作为子目录
+        String dataFormat = DateUtil.format2(new Date());
+        String fileName = file.getOriginalFilename();
+        String folderPath = uploadPath + "\\" + type + "\\" + dataFormat;
+        File uploadFolder = new File(folderPath);
+        if (!uploadFolder.isDirectory()) {
+            uploadFolder.mkdirs();
+        }
+        String randomName = UUID.randomUUID().toString().replace("-", "") + fileName.substring(fileName.lastIndexOf("."));
+        try {
+            file.transferTo(new File(uploadFolder, randomName));
+        } catch (IOException e) {
+            throw AppException.of("转换文件流失败");
+        }
+        // 返回文件信息
+        Resource resource = new Resource();
+        resource.setCreateTime(new Date());
+        resource.setPath(folderPath + "\\" + fileName);
+        resource.setFileName(fileName);
+        resource.setUri(request.getScheme() + "://" + request.getServerName() + "/upload/file/" + dataFormat + randomName);
+        if (resourceMapper.insert(resource) > 0) {
+            return resource;
+        } else {
+            return null;
         }
     }
 

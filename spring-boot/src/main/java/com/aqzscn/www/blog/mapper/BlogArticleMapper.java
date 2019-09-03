@@ -49,8 +49,6 @@ public interface BlogArticleMapper {
      */
     BlogArticle selectByPrimaryKey(Long id);
 
-    BlogArticle selectByTimeAndTitle(BlogArticle record);
-
     /**
      * 根据条件查询文章
      * @param articleRequest 文章实体类
@@ -58,16 +56,46 @@ public interface BlogArticleMapper {
      */
     Page<BlogArticle> select(ArticleRequest articleRequest);
 
+    /**
+     * 查询不属于连载中的文章
+     *
+     * @return 文章列表
+     */
+    List<BlogArticle> selectNoSeries();
 
+
+    /**
+     * 根据主键更新文章
+     *
+     * @param record 文章信息
+     * @return 影响行数
+     */
     int updateByPrimaryKeyWithBLOBs(BlogArticle record);
 
     /**
-     * 与标签关联的操作
+     * 更新与连载间的关系
+     *
+     * @param aId 文章id
+     * @param sId 连载id
+     * @param aOrder 文章在连载中的顺序
+     * @return 影响行数
+     */
+    int updateSeriesMapById(Long aId, Long sId, Integer aOrder);
+
+    /**
+     * 将文章和标签关联起来
+     *
+     * @param articleId 文章id
+     * @param tagId 标签id
+     * @return 影响行数
      */
     int insertTag(Long articleId, Long tagId);
 
     /**
-     * 与连载关联的操作
+     * 选择在连载中排序最后的文章
+     *
+     * @param seriesId 连载id
+     * @return 文章
      */
     BlogArticle selectLastInSeries(Long seriesId);
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.global.mapper.ResourceMapper">
+  <resultMap id="BaseResultMap" type="com.aqzscn.www.global.mapper.Resource">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="uri" jdbcType="VARCHAR" property="uri" />
+    <result column="size" jdbcType="INTEGER" property="size" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">id, file_name, path, uri, size, create_time</sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" /> from g_resource where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from g_resource where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.aqzscn.www.global.mapper.Resource">
+    insert into g_resource (file_name, path, uri, size, create_time) values (#{fileName}, #{path}, #{uri}, #{size}, #{createTime})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.aqzscn.www.global.mapper.Resource">
+    update g_resource set file_name=#{fileName}, path=#{path}, uri=#{uri}, size = #{size}, create_time = #{createTime} where id = #{id}
+  </update>
+</mapper>

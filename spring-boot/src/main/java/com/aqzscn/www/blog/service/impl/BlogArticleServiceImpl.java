@@ -60,9 +60,8 @@ public class BlogArticleServiceImpl implements BlogArticleService {
         if (this.articleMapper.insert(articleRequest) > 0) {
             // 如果没有标签，结束流程，否则获取博文id并添加标签
             if (articleRequest.getTagList() != null && articleRequest.getTagList().size() > 0) {
-                BlogArticle article = this.articleMapper.selectByTimeAndTitle(articleRequest);
                 for (BlogTag tag : articleRequest.getTagList()) {
-                    if (this.articleMapper.insertTag(article.getId(), tag.getId()) == 0) {
+                    if (this.articleMapper.insertTag(articleRequest.getId(), tag.getId()) == 0) {
                         return false;
                     }
                 }
@@ -86,6 +85,16 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     }
 
     @Override
+    public List<BlogArticle> selectAll(ArticleRequest articleRequest) throws RuntimeException {
+        return articleMapper.select(articleRequest);
+    }
+
+    @Override
+    public List<BlogArticle> selectNoSeries() throws RuntimeException {
+        return articleMapper.selectNoSeries();
+    }
+
+    @Override
     public void exportFile(String idStr) throws RuntimeException {
         ArticleRequest articleRequest = new ArticleRequest();
         // 设置非基本信息，否则无法输出content
@@ -93,10 +102,6 @@ public class BlogArticleServiceImpl implements BlogArticleService {
         articleRequest.setIdList(Arrays.asList(idStr.split(",")));
         List<BlogArticle> articleList = articleMapper.select(articleRequest);
         if (articleList != null && articleList.size() > 0) {
-            // 获取第一个文章
-//            BlogArticle article = articleList.get(0);
-            // 下载文件
-//            fileService.downloadPlain(article.getContent(), article.getTitle(), ".md");
             List<String> contentList = new ArrayList<>();
             List<String> nameList = new ArrayList<>();
             for(BlogArticle ba: articleList) {
@@ -105,6 +110,23 @@ public class BlogArticleServiceImpl implements BlogArticleService {
             }
             fileService.downloadPlains(contentList, nameList, ".md");
         }
+    }
+
+    @Override
+    public boolean updateArticleSeriesMap(Long aId, Long sId) throws RuntimeException {
+        BlogSeries series = seriesMapper.selectByPrimaryKey(sId);
+        if (series==null) {
+            throw AppException.of(ReturnError.VALIDATE_FAILED, "连载信息不存在");
+        }
+        // 自动设置在连载中的顺序
+        BlogArticle article = this.articleMapper.selectLastInSeries(sId);
+        if (article!=null) {
+            articleMapper.updateSeriesMapById(aId, sId, article.getSeriesOrder() + 1);
+        }else {
+            // 如果没有找到，则设置顺序为0
+            articleMapper.updateSeriesMapById(aId, sId, 0);
+        }
+        return true;
     }
 
     @Override

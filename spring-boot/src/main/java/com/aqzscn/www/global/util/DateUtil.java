@@ -17,6 +17,11 @@ public class DateUtil {
         return simpleDateFormat.format(date);
     }
 
+    public static String format2(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy\\MM\\dd");
+        return simpleDateFormat.format(date);
+    }
+
     // 延后或提前时间
     public static Date push(Long mills) {
         return new Date(System.currentTimeMillis() + mills);

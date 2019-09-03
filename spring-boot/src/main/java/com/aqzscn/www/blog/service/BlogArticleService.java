@@ -4,6 +4,8 @@ import com.aqzscn.www.blog.domain.po.ArticleRequest;
 import com.aqzscn.www.blog.mapper.BlogArticle;
 import com.aqzscn.www.global.domain.dto.MyPage;
 
+import java.util.List;
+
 /**
  * 文章服务
  *
@@ -40,12 +42,39 @@ public interface BlogArticleService {
     MyPage select(ArticleRequest articleRequest) throws RuntimeException;
 
     /**
+     * 根据条件查询全部文章
+     *
+     * @param articleRequest 查询条件
+     * @return 文章列表
+     * @throws RuntimeException 运行时异常
+     */
+    List<BlogArticle> selectAll(ArticleRequest articleRequest) throws RuntimeException;
+
+    /**
+     * 查询没有在连载中的文章
+     *
+     * @return 文章列表
+     * @throws RuntimeException 运行时异常
+     */
+    List<BlogArticle> selectNoSeries() throws RuntimeException;
+
+    /**
      * 导出文章
      *
      * @param idStr ,分割的主键列表
      * @throws RuntimeException 运行时异常
      */
     void exportFile(String idStr) throws RuntimeException;
+
+    /**
+     * 更新文章和连载之间的关系
+     *
+     * @param aId 文章id
+     * @param sId 连载id
+     * @return 是否成功
+     * @throws RuntimeException 运行时异常
+     */
+    boolean updateArticleSeriesMap(Long aId, Long sId) throws RuntimeException;
 
     /**
      * 根据主键查询文章

@@ -14,12 +14,12 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class BlogTagServiceImp implements BlogTagService {
+public class BlogTagServiceImpl implements BlogTagService {
 
     private final BlogTagMapper tagMapper;
 
     @Autowired
-    public BlogTagServiceImp(BlogTagMapper tagMapper) {
+    public BlogTagServiceImpl(BlogTagMapper tagMapper) {
         this.tagMapper = tagMapper;
     }
 

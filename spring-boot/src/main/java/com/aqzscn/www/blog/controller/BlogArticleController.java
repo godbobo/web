@@ -9,6 +9,7 @@ import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -64,7 +65,7 @@ public class BlogArticleController extends BaseController {
     @ApiOperation("根据主键列表批量删除文章")
     @ApiImplicitParam(paramType = "query", name = "idStr", value = "主键列表")
     public ReturnVo batchDeleteById(@RequestParam String idStr) throws RuntimeException {
-        if (StringUtils.isBlank(idStr)){
+        if (StringUtils.isBlank(idStr)) {
             throw AppException.of(ReturnError.VALIDATE_FAILED);
         }
         return response(articleService.batchDeleteById(idStr));
@@ -80,7 +81,13 @@ public class BlogArticleController extends BaseController {
             articleRequest.setTitle(null);
         }
         ReturnVo returnVo = new ReturnVo();
-        returnVo.setData(this.articleService.select(articleRequest));
+        if ("page".equals(articleRequest.getQueryType())) {
+            returnVo.setData(this.articleService.select(articleRequest));
+        } else if ("all".equals(articleRequest.getQueryType())) {
+            returnVo.setData(articleService.selectAll(articleRequest));
+        } else if ("noSeries".equals(articleRequest.getQueryType())) {
+            returnVo.setData(articleService.selectNoSeries());
+        }
         return returnVo;
     }
 
@@ -104,6 +111,19 @@ public class BlogArticleController extends BaseController {
         ReturnVo vo = new ReturnVo();
         vo.setData(this.articleService.selectById(id));
         return vo;
+    }
+
+    @PutMapping("/article-series-map")
+    @ApiOperation("修改文章和连载质检的映射")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "aId", value = "文章主键"),
+            @ApiImplicitParam(paramType = "query", name = "sId", value = "连载主键")
+    })
+    public ReturnVo updateArticleMapSeries(@RequestParam Long aId, @RequestParam Long sId) throws RuntimeException {
+        if(aId == null || sId == null) {
+            throw AppException.of(ReturnError.VALIDATE_FAILED);
+        }
+        return response(articleService.updateArticleSeriesMap(aId, sId));
     }
 
 }
