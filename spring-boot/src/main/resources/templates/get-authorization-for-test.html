@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>获取Authorization</title>
+    <!-- ZUI 标准版压缩后的 CSS 文件 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/zui/1.9.1/css/zui.min.css">
+
+
+</head>
+<body>
+<div style="width: 100vw; text-align: center;">
+    <div class="card" style="margin-top:20vh; text-align: center; display: inline-block; padding: 15px 20px;">
+        <h1>输入账号密码以获取Token</h1>
+        <div style="height: 30px;"></div>
+        <form>
+            <div class="input-control has-icon-left">
+                <input id="username" type="text" class="form-control" placeholder="用户名">
+                <label for="username" class="input-control-icon-left"><i class="icon icon-user "></i></label>
+            </div>
+            <div style="height: 10px;"></div>
+            <div class="input-control has-icon-left">
+                <input id="password" autocomplete="off" type="password" class="form-control" placeholder="密码">
+                <label for="password" class="input-control-icon-left"><i class="icon icon-key"></i></label>
+            </div>
+            <div style="height: 10px;"></div>
+            <button id="btn" class="btn btn-block btn-primary" type="button" onclick="handleSubmitLogin()">获取Token并复制到剪切板</button>
+        </form>
+    </div>
+</div>
+<textarea id="txt" style="position: absolute;top: 0;left: 0;opacity: 0;z-index: -10;"></textarea>
+<!-- ZUI Javascript 依赖 jQuery -->
+<script src="//cdn.bootcss.com/zui/1.9.1/lib/jquery/jquery.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/zui/1.9.1/js/zui.min.js"></script>
+<script>
+    $(function() {
+        // console.log(document.domain, window.location.hostname, window.location.protocol, window.location.port)
+    });
+
+    function handleSubmitLogin() {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        $('#btn').button('loading');
+        // 获取当前地址
+        // const url = 'http://127.0.0.1:521/api/oauth/token'
+        var url = window.location.protocol + '//' + document.domain + ':' + window.location.port + '/api/oauth/token';
+        $.ajax({
+            type: 'POST',
+            url: url,
+            headers: {
+                Authorization: 'Basic cGFzc3dvcmQ6MTIz'
+            },
+            data: {
+                grant_type: 'password',
+                scope: 'all',
+                username: username,
+                password: password
+            },
+            success: function(data) {
+            var token = data.access_token;
+            if (token) {
+                var input = document.getElementById('txt');
+                input.value = 'bearer ' + token; // 修改文本框的内容
+                input.select(); // 选中文本
+                document.execCommand('copy');
+                // console.log($('#txt').val())
+                new $.zui.Messager('授权成功，token已复制到剪切板', {
+                    type: 'success'
+                }).show()
+            }
+        },
+            complete: function() {
+            $('#btn').button('reset')
+        }
+    })
+    }
+
+</script>
+</body>
+</html>

@@ -1,25 +1,25 @@
 package com.aqzscn.www.global.controller;
 
+import com.aqzscn.www.global.config.validation.ValidationGroup2;
 import com.aqzscn.www.global.domain.co.AppException;
 import com.aqzscn.www.global.domain.co.GlobalCaches;
+import com.aqzscn.www.global.domain.dto.MyPage;
+import com.aqzscn.www.global.domain.dto.PageRequest;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.mapper.Dispatch;
-import com.aqzscn.www.global.util.JacksonUtil;
+import com.aqzscn.www.global.service.DispatchService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,16 +34,26 @@ import java.util.Map;
 public class DispatchController extends BaseController {
 
     private final RestTemplate restTemplate;
-    private final Logger logger = LoggerFactory.getLogger(DispatchController.class);
+    private DispatchService dispatchService;
 
-    public DispatchController(HttpServletRequest request, HttpServletResponse response, RestTemplate restTemplate) {
+    public DispatchController(HttpServletRequest request, HttpServletResponse response, RestTemplate restTemplate, DispatchService dispatchService) {
         super(request, response);
         this.restTemplate = restTemplate;
+        this.dispatchService = dispatchService;
     }
 
-    @ApiModelProperty("中转post请求(仅支持POST JSON数据)")
+    @ApiOperation("获取中转服务列表")
+    @GetMapping("/dispatches")
+    public ReturnVo selectDispatches(@Validated(ValidationGroup2.class) PageRequest pageRequest) throws RuntimeException {
+        ReturnVo vo = new ReturnVo();
+        MyPage page = dispatchService.selectDispatch(pageRequest.getPageNum(), pageRequest.getPageSize());
+        vo.setData(page);
+        return vo;
+    }
+
+    @ApiOperation("中转post请求(仅支持POST JSON数据)")
     @PostMapping("/dispatch/**")
-    public String post(@RequestBody String str) throws RuntimeException {
+    public String post(@RequestBody String json) throws RuntimeException {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Dispatch dispatch = GlobalCaches.DISPATCH;
@@ -52,10 +62,10 @@ public class DispatchController extends BaseController {
                 throw AppException.of("当前没有激活的转发服务，请激活后使用！");
             }
             // 判断是否需要处理请求数据
-            String reqBody = str;
+            String reqBody = json;
             if (StringUtils.isNotBlank(dispatch.getReqTargetParam())) {
                 // 对于请求数据，是否需要获取具体数据（仅支持第一层对象）
-                JsonNode node = objectMapper.readTree(str);
+                JsonNode node = objectMapper.readTree(json);
                 String objStr = objectMapper.writeValueAsString(node.get(dispatch.getReqTargetParam()));
                 if (StringUtils.isNotBlank(dispatch.getReqPrefix())) {
                     reqBody = "jsonRest=" + objStr;
