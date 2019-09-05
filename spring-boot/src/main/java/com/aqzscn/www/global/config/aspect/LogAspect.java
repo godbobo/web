@@ -29,7 +29,7 @@ public class LogAspect {
 
     private final JacksonUtil jacksonUtil = new JacksonUtil();
 
-    @Pointcut("execution(public * com.aqzscn.www.global.controller..*.*(..)) || execution(public * com.aqzscn.www.blog.controller..*.*(..))")
+    @Pointcut("execution(public * com.aqzscn.www.global.controller..*.*(..)) || execution(public * com.aqzscn.www.blog.controller..*.*(..)) || execution(public * com.aqzscn.www.weixin.controller..*.*(..))")
     public void log() {}
 
     @Around(value = "log()")

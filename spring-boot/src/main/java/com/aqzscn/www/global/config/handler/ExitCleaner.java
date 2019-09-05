@@ -19,7 +19,7 @@ public class ExitCleaner {
 
     @PreDestroy
     public void destroy() {
-        this.logger.info("正在关闭...");
+        this.logger.info("系统已停止运行");
     }
 
 }

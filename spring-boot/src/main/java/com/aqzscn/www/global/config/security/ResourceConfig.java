@@ -87,6 +87,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/swagger-resources","/swagger-resources/configuration/security",
                         "/swagger-ui.html").permitAll()
                 .antMatchers("/**/*-files").permitAll()
+                .antMatchers("/wx/msg").permitAll()
                 .antMatchers("/g/dispatch/**").permitAll()
                 .antMatchers("/g/token-page").permitAll()
                 .antMatchers("/g/users").hasRole("USER")
