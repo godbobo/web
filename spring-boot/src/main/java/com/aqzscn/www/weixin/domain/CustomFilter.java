@@ -15,6 +15,11 @@ public interface CustomFilter {
     String getResult();
 
     /**
+     * 获取功能代码
+     */
+    String getKey();
+
+    /**
      * 是否执行下一个过滤器
      * @param eventMessage 微信消息体
      * @return 布尔值

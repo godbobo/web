@@ -10,6 +10,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +28,14 @@ public class SystemInitializer implements ApplicationRunner {
     private final RoleMapper roleMapper;
     private final ParamMapper paramMapper;
     private final DispatchMapper dispatchMapper;
+    private final DictMapper dictMapper;
 
     @Autowired
-    public SystemInitializer(RoleMapper roleMapper, ParamMapper paramMapper, DispatchMapper dispatchMapper) {
+    public SystemInitializer(RoleMapper roleMapper, ParamMapper paramMapper, DispatchMapper dispatchMapper, DictMapper dictMapper) {
         this.roleMapper = roleMapper;
         this.paramMapper = paramMapper;
         this.dispatchMapper = dispatchMapper;
+        this.dictMapper = dictMapper;
     }
 
     @Override
@@ -44,6 +47,18 @@ public class SystemInitializer implements ApplicationRunner {
             GlobalCaches.PARAMS.put(p.getLabel(), p.getVal());
         }
         this.logger.info("系统参数列表初始化完成，共获取到 {} 条记录", params.size());
+
+        this.logger.info("正在获取字典列表...");
+        List<Dict> dicts = this.dictMapper.selectDicts();
+        List<Dict> types = this.dictMapper.selectTypes();
+        for(Dict t : types) {
+            GlobalCaches.DICTS.put(t.getCode(), new ArrayList<>());
+        }
+        for(Dict d : dicts) {
+            GlobalCaches.DICTS.get(d.getCode()).add(d);
+        }
+        this.logger.info("字典表初始化完成，共获取到 {} 条记录，{} 种类别", dicts.size(), types.size());
+
         this.logger.info("正在初始化角色列表...");
         List<Role> roles = this.roleMapper.selectAll();
         for(Role r : roles) {

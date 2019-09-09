@@ -17,6 +17,10 @@ spring:
     data: classpath:datasource/data.sql
     separator: $$
     continue-on-error: true
+  redis:
+    keyPrefix:
+      all: com.aqzscn.www.
+      wxfunc: weixin.func.
 server:
   servlet:
     context-path: /api
@@ -38,3 +42,7 @@ mybatis:
 mail:
   fromMail:
     addr: 980742324@qq.com
+myoptions:
+  weixin:
+    hitokoto:
+      url:

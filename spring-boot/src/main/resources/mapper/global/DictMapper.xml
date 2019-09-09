@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.global.mapper.DictMapper">
+
+    <resultMap id="baseResultMap" type="com.aqzscn.www.global.mapper.Dict">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    </resultMap>
+
+    <select id="selectDicts" resultMap="baseResultMap">
+        select * from g_dict where type is not null
+    </select>
+
+    <select id="selectTypes" resultMap="baseResultMap">
+        select * from g_dict where type is null
+    </select>
+</mapper>
