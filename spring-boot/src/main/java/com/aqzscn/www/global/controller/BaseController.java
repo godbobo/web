@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class BaseController {
 
-    private final HttpServletRequest request;
+    protected final HttpServletRequest request;
     private final HttpServletResponse response;
 
     public BaseController(HttpServletRequest request, HttpServletResponse response) {

@@ -26,6 +26,9 @@ public class WeixinServiceImpl implements WeixinService {
     @Value("${spring.redis.keyPrefix.all}${spring.redis.keyPrefix.wxfunc}")
     private String redisPrefix;
 
+    @Value("${myoptions.weixin.enable}")
+    private Boolean enableService;
+
     public WeixinServiceImpl() {
         // 目前是手动添加过滤器，后面可尝试自定义注解，然后通过Spring容器来获取所有带有指定注解的类来动态读取配置
         filters.add(new MoneyManager());
@@ -35,6 +38,9 @@ public class WeixinServiceImpl implements WeixinService {
 
     @Override
     public String doDispatch(EventMessage eventMessage) {
+        if (!this.enableService) {
+            return "微信服务未启动，请联系管理员解决。";
+        }
         String str = "欢迎关注贯耳症！回复以下数字可使用对应功能：\n" +
                 "1 记账\n" +
                 "2 垃圾分类查询\n" +

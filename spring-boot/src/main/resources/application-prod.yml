@@ -1,6 +1,30 @@
 spring:
   datasource:
-    initialization-mode: always
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/bobo?serverTimezone=UTC
+    username: root
+    password: root
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+logging:
+  path: ${user.home}/mydebug/web/log
+  level:
+    com:
+      aqzscn:
+        www: info
 server:
   ssl:
-    enabled: true
+    enabled: false
+  port: 522
+myfile:
+  export: ${user.home}\mydebug\web\export
+  upload: D:\Environment\nginx-1.15.9\html\static\upload
+myoptions:
+  series:
+    defaultimg: https://file.iviewui.com/asd/asd-u-10.png
+  weixin:
+    appid: wxc65b34467bd05206
+    appsecret: 64c67f7fb7adc2c4b01a591586b760b0
+    mytoken: 2b0zeal1cn9

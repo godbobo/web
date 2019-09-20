@@ -89,6 +89,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/**/*-files").permitAll()
                 .antMatchers("/wx/msg").permitAll()
                 .antMatchers("/g/dispatch/**").permitAll()
+                .antMatchers("/g/utils/**").permitAll()
                 .antMatchers("/g/token-page").permitAll()
                 .antMatchers("/g/users").hasRole("USER")
                 .antMatchers("/blog/**").access("hasAnyRole('USER', 'ADMIN')")

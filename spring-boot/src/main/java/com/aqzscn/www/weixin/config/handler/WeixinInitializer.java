@@ -19,10 +19,16 @@ public class WeixinInitializer implements ApplicationRunner {
     @Value("${myoptions.weixin.appsecret}")
     private String appSecret;
 
+    @Value("${myoptions.weixin.enable}")
+    private Boolean enableService;
+
     private final Logger logger = LoggerFactory.getLogger(WeixinInitializer.class);
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        if (!this.enableService) {
+            return;
+        }
         this.logger.info("正在初始化微信服务...");
         TokenManager.setDaemon(false);
         TokenManager.init(this.appId, this.appSecret);

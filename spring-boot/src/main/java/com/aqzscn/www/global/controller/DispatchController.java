@@ -102,7 +102,7 @@ public class DispatchController extends BaseController {
         CustomVo vo = new CustomVo();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode node = objectMapper.readTree("{\"RelUser\":{\"appid\":\"wx8a66989d34571ce0\",\"defaultrelapp\":\"1\",\"openid\":\"oBbT400YOp196crc2LPGslMfj0Ms\",\"relappid\":\"10\",\"relappname\":\"浙一\",\"reluserid\":\"262\"}}");
+            JsonNode node = objectMapper.readTree("{\"RelUser\":{\"appid\":\"wx8a66989d34571ce0\",\"defaultrelapp\":\"1\",\"openid\":\"oBbT400YOp196crc2LPGslMfj0Ms\",\"relappid\":\"10\",\"relappname\":\"浙一\",\"reluserid\":\"95378\"}}");
             vo.setData(node);
             vo.setCode(0);
             vo.setMsg("操作成功");

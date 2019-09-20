@@ -14,7 +14,8 @@ logging:
     com:
       aqzscn:
         www: info
-#server:
+server:
+  port: 521
 #  ssl:
 #    enabled: false
 myfile:
