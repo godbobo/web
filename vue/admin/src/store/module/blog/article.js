@@ -3,7 +3,8 @@ import {
   postArticles,
   deleteArticle,
   batchDeleteArticles,
-  getArticleById
+  getArticleById,
+  putArticleSeriesMap
 } from '@/api/blog/article'
 
 export default {
@@ -12,8 +13,8 @@ export default {
   getters: {},
   actions: {
     // 获取文章
-    getArticleLst ({ commit }, { title, pageNum, pageSize }) {
-      return getArticles({ title, pageNum, pageSize }).then(data => {
+    getArticleLst ({ commit }, param) {
+      return getArticles(param).then(data => {
         return data
       }).catch(error => {
         return Promise.reject(error)
@@ -56,6 +57,14 @@ export default {
     // 根据id查找文章
     getArticle ({ commit }, id) {
       return getArticleById(id).then(data => {
+        return data
+      }).catch(error => {
+        return Promise.reject(error)
+      })
+    },
+    // 修改文章和话题的关系
+    updateArticleSeriesMap ({ commit }, payload) {
+      return putArticleSeriesMap(payload.aid, payload.sid).then(data => {
         return data
       }).catch(error => {
         return Promise.reject(error)

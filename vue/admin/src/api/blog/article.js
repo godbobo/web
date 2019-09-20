@@ -40,12 +40,18 @@ export const batchDeleteArticles = (ids) => {
  * 根据条件查询文章列表
  * @param {*} param0 文章标题
  */
-export const getArticles = ({ title, pageNum, pageSize }) => {
+export const getArticles = ({ title, pageNum, pageSize, queryTypes }) => {
   const params = {
-    title,
     ...convertQuery({ pageNum, pageSize }, 'pageRequest')
     // 'pageRequest.pageNum': pageNum,
     // 'pageRequest.pageSize': pageSize
+  }
+  if (title) {
+    params.title = title
+  }
+  // 只有在传入请求类型时才加上该参数
+  if (queryTypes) {
+    params.queryType = queryTypes
   }
   return axios.request({
     url: 'blog/articles',
@@ -62,5 +68,22 @@ export const getArticleById = id => {
   return axios.request({
     url: 'blog/articles/' + id,
     method: 'get'
+  })
+}
+
+/**
+ * 修改文章和话题的映射关系
+ * @param {Number} aid 文章主键
+ * @param {Number} sid 话题主键
+ */
+export const putArticleSeriesMap = (aid, sid) => {
+  const params = {
+    aId: aid,
+    sId: sid
+  }
+  return axios.request({
+    url: 'blog/article-series-map',
+    method: 'put',
+    params
   })
 }

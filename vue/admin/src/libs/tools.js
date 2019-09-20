@@ -89,10 +89,10 @@ const getHandledValue = num => {
  */
 export const convertQuery = (data, objName) => {
   let res = {}
-  if (!data) return res
+  if (!data || !objName) return res
   for (let name in data) {
     // 过滤掉继承属性和函数属性,确保是自有属性,且没有方法(即函数类型的属性)
-    if (data.hasOwnProperty(name) && typeof data[name] !== 'function') {
+    if (data.hasOwnProperty(name) && data[name] && typeof data[name] !== 'function') {
       // 将值转为字符串
       res[`${objName}.${name}`] = data[name].toString()
     }

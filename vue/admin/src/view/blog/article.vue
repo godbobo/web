@@ -1,15 +1,10 @@
 <template>
   <Card shadow class="table-wrap">
-    <Table highlight-row :columns="tableHeaderDefine" :data="data" @on-selection-change="handleSelectionChange">
+    <p slot="title"><Icon type="md-book"/> 文章列表</p>
+    <Table highlight-row :columns="tableHeaderDefine" :loading="isTableLoading" :data="data" @on-selection-change="handleSelectionChange">
       <div slot="header" class="table-tools-wrap">
         <Button :disabled="!canDoBatch" class="item-margin" type="warning" icon="md-trash" @click="handleDeleteSelection">批量删除</Button>
-          <Dropdown trigger="click" @on-click="handleExportSelection">
-            <Button :disabled="!canDoBatch" class="item-margin" type="info" icon="ios-download">批量导出</Button>
-            <DropdownMenu slot="list">
-              <DropdownItem name="sql">SQL文件</DropdownItem>
-              <DropdownItem name="md">MD文件</DropdownItem>
-            </DropdownMenu>
-         </Dropdown>
+        <Button :disabled="!canDoBatch" class="item-margin" type="info" icon="ios-download" @click="handleExportSelection">批量导出</Button>
       </div>
       <Page slot="footer" :current.sync="params.pageNum" :page-size="params.pageSize" :total="rowTotal" show-elevator show-total @on-change="handlePageChange" />
     </Table>
@@ -113,7 +108,8 @@ export default {
       articleObj: {
         content: '',
         title: ''
-      }
+      },
+      isTableLoading: false
     }
   },
   computed: {
@@ -130,14 +126,18 @@ export default {
     ]),
     // 处理文章列表
     handleArticleLst () {
+      this.isTableLoading = true
       this.getArticleLst(this.params).then(data => {
+        this.isTableLoading = false
         if (data.lst) {
           this.data = data.lst
           this.rowTotal = data.total
         } else {
           this.data = []
         }
-      }).catch(() => {})
+      }).catch(() => {
+        this.isTableLoading = false
+      })
     },
     // 翻页
     handlePageChange (val) {
@@ -167,7 +167,7 @@ export default {
       console.debug('do nothing...')
     },
     // 导出已选项目
-    handleExportSelection (f) {
+    handleExportSelection () {
       if (this.currentSelect && this.currentSelect.length > 0) {
         let sel = ''
         this.currentSelect.map(val => {

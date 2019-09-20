@@ -27,4 +27,10 @@ html,body{
 #app {
   .size;
 }
+
+// 水平居中
+.ha-center {
+  text-align: center;
+  margin: 0 auto;
+}
 </style>
