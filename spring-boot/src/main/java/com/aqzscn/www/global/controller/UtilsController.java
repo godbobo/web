@@ -31,14 +31,16 @@ public class UtilsController extends BaseController {
         super(request, response);
     }
 
-    @ApiOperation("获取公网ip地址，仅在该服务挂载在公网时生效")
+    @ApiOperation("获取公网ip地址，FRP转发服务生效，独立部署时未经测试")
     @GetMapping("/public-host")
     public ReturnVo publicHost() {
         ReturnVo vo = new ReturnVo();
+//        String fip = request.getHeader("X-Forwarded-For");
+        String rip = request.getHeader("X-Real-IP");
         Map<String, String > reqs = new HashMap<>();
-        reqs.put("host", request.getRemoteHost());
-        reqs.put("port", request.getRemotePort() + "");
-        vo.setData("lalala");
+        reqs.put("host", rip);
+//        reqs.put("port", request.getRemotePort() + "");
+        vo.setData(reqs);
         return vo;
     }
 
