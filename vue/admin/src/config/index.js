@@ -18,7 +18,7 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://localhost:521/api/',
+    dev: 'http://web.frp.aqzscn.com/api/',
     pro: 'https://produce.com/'
   },
   /**
