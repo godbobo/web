@@ -452,6 +452,6 @@ export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
 export const setTitle = (routeItem, vm) => {
   const handledRoute = getRouteTitleHandled(routeItem)
   const pageTitle = showTitle(handledRoute, vm)
-  const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
+  const resTitle = pageTitle ? `${pageTitle} - ${title}` : title
   window.document.title = resTitle
 }
