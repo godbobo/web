@@ -46,3 +46,5 @@ myoptions:
     enable: false
     hitokoto:
       url:
+  service:
+    url: http://127.0.0.1:521

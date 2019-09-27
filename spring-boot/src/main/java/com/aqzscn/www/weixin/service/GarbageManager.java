@@ -4,7 +4,6 @@ import com.aqzscn.www.global.util.LettuceUtil;
 import com.aqzscn.www.weixin.domain.CustomFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import weixin.popular.bean.message.EventMessage;

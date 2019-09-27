@@ -1,8 +1,10 @@
 package com.aqzscn.www.global.controller;
 
+import com.aqzscn.www.global.domain.co.GlobalCaches;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +37,20 @@ public class UtilsController extends BaseController {
     @GetMapping("/public-host")
     public ReturnVo publicHost() {
         ReturnVo vo = new ReturnVo();
-//        String fip = request.getHeader("X-Forwarded-For");
+        String fip = request.getHeader("X-Forwarded-For");
         String rip = request.getHeader("X-Real-IP");
+        String ip = "";
+        // 先尝试获取header中的ip地址，如果存在，则一定是真实地址，最后再使用来源地址
+        if (StringUtils.isNotBlank(rip)) {
+            ip = rip;
+        } else if (StringUtils.isNotBlank(fip)) {
+            ip = fip;
+        } else {
+            ip = request.getRemoteHost();
+        }
         Map<String, String > reqs = new HashMap<>();
-        reqs.put("host", rip);
-//        reqs.put("port", request.getRemotePort() + "");
+        reqs.put("host", ip);
+        reqs.put("serverHost", GlobalCaches.PUBLIC_IP);
         vo.setData(reqs);
         return vo;
     }

@@ -27,4 +27,7 @@ public class GlobalCaches {
 
     // 转发服务配置
     public static Dispatch DISPATCH = null;
+
+    // 本机公网ip
+    public static String PUBLIC_IP = "";
 }

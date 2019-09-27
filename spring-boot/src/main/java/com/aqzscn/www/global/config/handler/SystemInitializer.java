@@ -2,13 +2,19 @@ package com.aqzscn.www.global.config.handler;
 
 import com.aqzscn.www.global.domain.co.GlobalCaches;
 import com.aqzscn.www.global.mapper.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +35,21 @@ public class SystemInitializer implements ApplicationRunner {
     private final ParamMapper paramMapper;
     private final DispatchMapper dispatchMapper;
     private final DictMapper dictMapper;
+    private final RestTemplate restTemplate;
+
+    @Value("${myoptions.service.url}")
+    private String serviceUrl;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @Autowired
-    public SystemInitializer(RoleMapper roleMapper, ParamMapper paramMapper, DispatchMapper dispatchMapper, DictMapper dictMapper) {
+    public SystemInitializer(RoleMapper roleMapper, ParamMapper paramMapper, RestTemplate restTemplate, DispatchMapper dispatchMapper, DictMapper dictMapper) {
         this.roleMapper = roleMapper;
         this.paramMapper = paramMapper;
         this.dispatchMapper = dispatchMapper;
         this.dictMapper = dictMapper;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -76,6 +90,21 @@ public class SystemInitializer implements ApplicationRunner {
             }
         }
         this.logger.info("转发列表初始化完成，共获取到 {} 条记录", dispatches.size());
+
+        this.logger.info("正在获取本机公网地址...");
+        try {
+            ResponseEntity<String> responseEntity = this.restTemplate.getForEntity(this.serviceUrl + this.contextPath + "/g/utils/public-host", String.class);
+            if (StringUtils.isNoneBlank(responseEntity.getBody())) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(responseEntity.getBody());
+                GlobalCaches.PUBLIC_IP = root.get("data").get("host").toString();
+            }
+        } catch (Exception e) {
+            this.logger.error(e.getMessage());
+        } finally {
+            this.logger.info("本机公网IP地址为：{}", GlobalCaches.PUBLIC_IP);
+        }
+
 
         long endTime = System.currentTimeMillis();
         this.logger.info("系统初始化完成，共花费 {} ms", endTime - startTime);
