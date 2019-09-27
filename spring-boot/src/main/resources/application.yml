@@ -21,6 +21,12 @@ spring:
     keyPrefix:
       all: com.aqzscn.www.
       wxfunc: weixin.func.
+    lettuce:
+      pool:
+        max-active: 8 #最大连接数
+        max-wait: -1 #默认-1 最大连接阻塞等待时间
+        max-idle: 8 #最大空闲连接 默认8
+        min-idle: 0 #最小空闲连接
 server:
   servlet:
     context-path: /api
@@ -43,6 +49,5 @@ mail:
     addr: 980742324@qq.com
 myoptions:
   weixin:
-    enable: false
     hitokoto:
       url:

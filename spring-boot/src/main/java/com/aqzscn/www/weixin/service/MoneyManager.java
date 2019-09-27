@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import weixin.popular.bean.message.EventMessage;
 
@@ -28,7 +29,8 @@ public class MoneyManager implements CustomFilter {
     @Value("${spring.redis.keyPrefix.all}${spring.redis.keyPrefix.wxfunc}")
     private String redisPrefix;
 
-    private LettuceUtil lettuceUtil = new LettuceUtil();
+    @Autowired
+    private RedisTemplate  redisTemplate;
 
     @Override
     public String getResult() {
@@ -44,10 +46,10 @@ public class MoneyManager implements CustomFilter {
     public boolean next(EventMessage eventMessage) {
         if (eventMessage.getContent().equals(this.key)) {
             String k = this.redisPrefix + eventMessage.getFromUserName();
-            this.lettuceUtil.set(key, this.key);
+            this.redisTemplate.opsForValue().set(k, this.key);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MINUTE, 30);
-            this.lettuceUtil.expireAt(k, calendar.getTime());
+            this.redisTemplate.expireAt(k, calendar.getTime());
             this.res = "欢迎使用记账，回复以下数字使用对应功能：";
             return false;
         }

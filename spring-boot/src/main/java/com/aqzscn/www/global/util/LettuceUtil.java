@@ -2,6 +2,7 @@ package com.aqzscn.www.global.util;
 
 
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.ScanOptions;
@@ -23,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 public class LettuceUtil {
 
 
-    @Resource
-    private StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
 
 

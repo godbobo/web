@@ -25,6 +25,7 @@ myoptions:
   series:
     defaultimg: https://file.iviewui.com/asd/asd-u-10.png
   weixin:
+    enable: true
     appid: wxc65b34467bd05206
     appsecret: 64c67f7fb7adc2c4b01a591586b760b0
     mytoken: 2b0zeal1cn9
