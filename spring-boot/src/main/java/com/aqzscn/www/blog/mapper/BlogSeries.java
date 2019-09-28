@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel("博文连载")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlogSeries {
+    @Id
     @ApiModelProperty(value = "主键")
     @NotNull(message = "{blog.series.id.notnull", groups = {ValidationGroup2.class})
     private Long id;

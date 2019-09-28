@@ -1,22 +1,31 @@
 package com.aqzscn.www.global.mapper;
 
+import com.aqzscn.www.global.config.validation.ValidationGroup1;
+import com.aqzscn.www.global.config.validation.ValidationGroup2;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 
 @ApiModel("转发服务表")
+@Table(name = "g_dispatch")
 public class Dispatch implements Serializable {
 
+    @Id
     @ApiModelProperty("主键")
+    @NotBlank(message = "{dispatch.service.id.notnull}", groups = {ValidationGroup1.class})
     private Long id;
 
     @ApiModelProperty("服务名")
+    @NotBlank(message = "{dispatch.service.serviceName.notnull}", groups = {ValidationGroup2.class})
     private String serviceName;
 
     @ApiModelProperty("服务地址")
+    @NotBlank(message = "{dispatch.service.serviceUrl.notnull}", groups = {ValidationGroup2.class})
     private String serviceUrl;
 
     @ApiModelProperty("新请求体键名")

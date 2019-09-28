@@ -1,5 +1,6 @@
 package com.aqzscn.www.global.controller;
 
+import com.aqzscn.www.global.config.validation.ValidationGroup1;
 import com.aqzscn.www.global.config.validation.ValidationGroup2;
 import com.aqzscn.www.global.domain.co.AppException;
 import com.aqzscn.www.global.domain.co.GlobalCaches;
@@ -18,6 +19,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -50,6 +52,35 @@ public class DispatchController extends BaseController {
         vo.setData(page);
         return vo;
     }
+
+
+    @ApiOperation("新增中转服务")
+    @PostMapping("/dispatches")
+    public ReturnVo insertDispatch(@Validated(ValidationGroup2.class) @RequestBody Dispatch dispatch, BindingResult result) throws RuntimeException {
+        if (result.hasErrors()) {
+            throw AppException.of(result.getAllErrors());
+        }
+        return this.response(this.dispatchService.insertDispatch(dispatch));
+    }
+
+    @ApiOperation("修改中转服务")
+    @PutMapping("/dispatches")
+    public ReturnVo updateDispatch(@Validated(ValidationGroup1.class) @RequestBody Dispatch dispatch, BindingResult result) throws RuntimeException {
+        if (result.hasErrors()) {
+            throw AppException.of(result.getAllErrors());
+        }
+        return this.response(this.dispatchService.updateDispatch(dispatch));
+    }
+
+    @ApiOperation("删除中转服务")
+    @DeleteMapping("/dispatches")
+    public ReturnVo deleteDispatch(@Validated(ValidationGroup1.class) @RequestBody Dispatch dispatch, BindingResult result) throws RuntimeException {
+        if (result.hasErrors()) {
+            throw AppException.of(result.getAllErrors());
+        }
+        return this.response(this.dispatchService.deleteDispatch(dispatch));
+    }
+
 
     @ApiOperation("中转post请求(仅支持POST JSON数据)")
     @PostMapping("/dispatch/**")

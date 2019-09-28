@@ -1,7 +1,9 @@
 package com.aqzscn.www.global.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.common.Mapper;
+
+import javax.persistence.Table;
 
 /**
  * 文件资源数据操作
@@ -10,16 +12,8 @@ import org.springframework.stereotype.Component;
  * @date 2019/6/5
  */
 @Component
-@Mapper
-public interface ResourceMapper {
-
-    /**
-     * 根据主键删除资源
-     *
-     * @param id 主键
-     * @return 影响行数
-     */
-    int deleteByPrimaryKey(Long id);
+@Table(name = "g_resource")
+public interface ResourceMapper extends Mapper<Resource> {
 
     /**
      * 插入资源
@@ -28,14 +22,6 @@ public interface ResourceMapper {
      * @return 影响行数
      */
     int insert(Resource record);
-
-    /**
-     * 根据主键获取资源信息
-     *
-     * @param id 主键
-     * @return 资源信息
-     */
-    Resource selectByPrimaryKey(Long id);
 
     /**
      * 根据主键更新资源

@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import tk.mybatis.spring.annotation.MapperScan;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author Godbobo
  * @date 2019/5/26
  */
+@MapperScan(basePackages = {"com.aqzscn.www.blog.mapper", "com.aqzscn.www.global.mapper"})
 @SpringBootApplication
 @EnableScheduling
 public class WwwApplication extends WebMvcConfigurationSupport {

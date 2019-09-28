@@ -1,8 +1,9 @@
 package com.aqzscn.www.global.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.common.Mapper;
 
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -11,9 +12,9 @@ import java.util.List;
  * @author Godbobo
  * @date 2019/6/1
  */
-@Mapper
 @Component
-public interface ParamMapper  {
+@Table(name = "g_param")
+public interface ParamMapper extends Mapper<Param> {
 
     /**
      * 查询全部参数

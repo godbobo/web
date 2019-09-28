@@ -1,7 +1,8 @@
 package com.aqzscn.www.blog.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
@@ -11,16 +12,8 @@ import java.util.List;
  * @author Godbobo
  * @date 2019/06/02
  */
-@Mapper
 @Component
-public interface BlogSeriesMapper {
-    /**
-     * 根据主键删除
-     *
-     * @param id 连载主键
-     * @return 影响行数
-     */
-    int deleteByPrimaryKey(@Param("id") Long id);
+public interface BlogSeriesMapper extends Mapper<BlogSeries> {
 
     /**
      * 根据主键列表批量删除
@@ -37,22 +30,6 @@ public interface BlogSeriesMapper {
      * @return 影响行数
      */
     int insert(BlogSeries record);
-
-    /**
-     * 根据主键查找
-     *
-     * @param id 主键
-     * @return 连载实体
-     */
-    BlogSeries selectByPrimaryKey(@Param("id") Long id);
-
-    /**
-     * 根据主键更新
-     *
-     * @param record 连载信息
-     * @return 影响行数
-     */
-    int updateByPrimaryKey(BlogSeries record);
 
     /**
      * 查询全部记录

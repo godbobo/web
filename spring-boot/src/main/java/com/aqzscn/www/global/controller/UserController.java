@@ -60,7 +60,6 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/token-page")
-    @Profile({"dev"})
     public ModelAndView authorizationForTest() {
         return new ModelAndView("get-authorization-for-test.html");
     }

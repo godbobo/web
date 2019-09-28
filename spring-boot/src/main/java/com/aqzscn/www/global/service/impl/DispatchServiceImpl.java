@@ -25,12 +25,31 @@ public class DispatchServiceImpl implements DispatchService {
     public MyPage selectDispatch(Integer page, Integer rows) {
         if (page != null && rows != null) {
             PageHelper.startPage(page, rows);
-            Page<Dispatch> pi = (Page<Dispatch>) dispatchMapper.selectDispatch();
+            Page<Dispatch> pi = (Page<Dispatch>) dispatchMapper.selectAll();
             return new MyPage(pi.toPageInfo());
         } else {
             MyPage p = new MyPage();
-            p.setLst(dispatchMapper.selectDispatch());
+            p.setLst(dispatchMapper.selectAll());
             return p;
         }
     }
+
+    @Override
+    public Boolean insertDispatch(Dispatch dispatch) {
+        // 避免主键冲突
+        dispatch.setId(null);
+        return this.dispatchMapper.insert(dispatch) > 0;
+    }
+
+    @Override
+    public Boolean updateDispatch(Dispatch dispatch) {
+        return this.dispatchMapper.updateByPrimaryKey(dispatch) > 0;
+    }
+
+    @Override
+    public Boolean deleteDispatch(Dispatch dispatch) {
+        return this.dispatchMapper.delete(dispatch) > 0;
+    }
+
+
 }

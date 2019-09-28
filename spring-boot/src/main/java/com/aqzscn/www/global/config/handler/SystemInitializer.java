@@ -82,7 +82,7 @@ public class SystemInitializer implements ApplicationRunner {
 
 
         this.logger.info("正在初始化转发列表...");
-        List<Dispatch> dispatches = this.dispatchMapper.selectDispatch();
+        List<Dispatch> dispatches = this.dispatchMapper.selectAll();
         for (Dispatch d : dispatches) {
             if (d.getEnable().equals(1)) {
                 GlobalCaches.DISPATCH = d;

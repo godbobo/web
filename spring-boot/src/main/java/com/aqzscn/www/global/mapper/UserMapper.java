@@ -1,8 +1,9 @@
 package com.aqzscn.www.global.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.common.Mapper;
 
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -11,9 +12,9 @@ import java.util.List;
  * @author Godbobo
  * @date 2019/5/26
  */
-@Mapper
 @Component
-public interface UserMapper {
+@Table(name = "g_user")
+public interface UserMapper extends Mapper<User> {
     /**
      * 根据登录名获取用户信息
      *

@@ -13,7 +13,6 @@
     <select id="selectAll" resultMap="Result1">
         select a.*, count(ba.id) article_num from blog_series a left join blog_article ba on a.id = ba.series group by a.id order by a.id desc
     </select>
-    <delete id="deleteByPrimaryKey">delete from blog_series where id = #{id}</delete>
     <delete id="batchDeleteByIds">
       delete from blog_series where id in
         <foreach collection="list" item="aId" open="(" close=")" separator=",">#{aId}</foreach>
@@ -21,8 +20,4 @@
     <insert id="insert" parameterType="com.aqzscn.www.blog.mapper.BlogSeries">
         insert into blog_series (name, auto_index, abs, img, ignore_order) values (#{name}, #{autoIndex}, #{abs}, #{img}, #{ignoreOrder})
     </insert>
-    <select id="selectByPrimaryKey" resultMap="Result1">select * from blog_series where id = #{id}</select>
-    <update id="updateByPrimaryKey">
-        update blog_series set name=#{name}, auto_index=#{autoIndex}, abs=#{abs}, img=#{img}, ignore_order=#{ignoreOrder} where id=#{id}
-    </update>
 </mapper>

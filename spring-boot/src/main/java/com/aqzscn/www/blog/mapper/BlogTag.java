@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 @ApiModel("标签实体类")
 public class BlogTag {
 
+    @Id
     private Long id;
 
     @ApiModelProperty(value = "标签名", required = true)

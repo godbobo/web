@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
@@ -19,6 +20,7 @@ import java.util.Date;
 @ApiModel("博文实体类")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlogArticle {
+    @Id
     private Long id;
 
     @ApiModelProperty(value = "博文标题")

@@ -1,8 +1,9 @@
 package com.aqzscn.www.global.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.common.Mapper;
 
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -11,8 +12,8 @@ import java.util.List;
  * @date 2019/9/6 19:18
  */
 @Component
-@Mapper
-public interface DictMapper {
+@Table(name = "g_dict")
+public interface DictMapper extends Mapper<Dict> {
 
     /**
      * 获取字典列表
