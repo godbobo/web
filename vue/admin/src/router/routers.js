@@ -1,5 +1,6 @@
 import Main from '@/components/main'
 import blogRouter from './blog'
+import dispatchRouter from './dispatch'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -51,6 +52,7 @@ export default [
     ]
   },
   blogRouter,
+  dispatchRouter,
   {
     path: '/message',
     name: 'message',

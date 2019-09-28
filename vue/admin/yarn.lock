@@ -1490,6 +1490,11 @@ async-validator@^1.10.0:
   dependencies:
     babel-runtime "6.x"
 
+async-validator@^1.12.2:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/async-validator/-/async-validator-1.12.2.tgz#beae671e7174d2938b7b4b69d2fb7e722b7fd72c"
+  integrity sha512-57EETfCPFiB7M4QscvQzWSGNsmtkjjzZv318SK1CBlstk+hycV72ocjriMOOM48HjvmoAoJGpJNjC7Z76RlnZA==
+
 async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.npm.taobao.org/async/download/async-1.5.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fasync%2Fdownload%2Fasync-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
@@ -5029,7 +5034,7 @@ iview-area@^1.5.17:
     iview "^3.0.0"
     vue "^2.5.17"
 
-iview@^3.0.0, iview@^3.1.5, iview@^3.2.2:
+iview@^3.0.0, iview@^3.1.5:
   version "3.4.2"
   resolved "https://registry.npm.taobao.org/iview/download/iview-3.4.2.tgz#1deafe8183fe29b9b33179d85faa37b3813b0f73"
   integrity sha1-Her+gYP+KbmzMXnYX6o3s4E7D3M=
@@ -5042,6 +5047,20 @@ iview@^3.0.0, iview@^3.1.5, iview@^3.2.2:
     popper.js "^1.14.6"
     tinycolor2 "^1.4.1"
     v-click-outside-x "^3.5.6"
+
+iview@^3.4.2:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/iview/-/iview-3.5.1.tgz#d15b97126ea89a71f5b3623d6add2fb48f6f44d6"
+  integrity sha512-UOwNvYtXi8TzjGvjwtw+4z21OU3Hvgl2Bx+9bphTdwb0B3UxfBDopDOdo5M9L70ztdbXlKxp8aysnCCrSKi8lQ==
+  dependencies:
+    async-validator "^1.12.2"
+    deepmerge "^2.2.1"
+    element-resize-detector "^1.2.0"
+    js-calendar "^1.2.3"
+    lodash.throttle "^4.1.1"
+    popper.js "^1.14.6"
+    tinycolor2 "^1.4.1"
+    v-click-outside-x "^4.0.19"
 
 javascript-stringify@^1.6.0:
   version "1.6.0"
@@ -8849,6 +8868,11 @@ v-click-outside-x@^3.5.6:
   version "3.7.1"
   resolved "https://registry.npm.taobao.org/v-click-outside-x/download/v-click-outside-x-3.7.1.tgz#aa03eaa0e41e44cb5207dcf86c2d9f0dd64084c1"
   integrity sha1-qgPqoOQeRMtSB9z4bC2fDdZAhME=
+
+v-click-outside-x@^4.0.19:
+  version "4.0.19"
+  resolved "https://registry.yarnpkg.com/v-click-outside-x/-/v-click-outside-x-4.0.19.tgz#63fc2e68e99b3486fde4209435ac0ed3b67da3fc"
+  integrity sha512-QY2XhLJWDCypJKJz+FftvpYa1nzq7mzUP756H7ucu89c/8Rx1aog9gOhPEwDK16A+y3LGvPuAYScKr6/7xh18Q==
 
 v-org-tree@^1.0.6:
   version "1.0.12"

@@ -101,6 +101,26 @@ export const convertQuery = (data, objName) => {
 }
 
 /**
+ * 集参数校验、发送请求、错误捕获为一体的工具类方法
+ * @param {Function} request 返回Promise的请求方法
+ * @param {Object} param 请求参数
+ * @param {Function} check 参数校验方法
+ */
+export const apiResponse = (request, param, check) => {
+  try {
+    if (!request) {
+      throw new Error('请求方法不存在！')
+    }
+    if (check) {
+      check(param)
+    }
+    return request(param || {})
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
+/**
  * @param {Number} timeStamp 传入的时间戳
  * @param {Number} startType 要返回的时间字符串的格式类型，传入'year'则返回年开头的完整时间
  */

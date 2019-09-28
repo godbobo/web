@@ -12,7 +12,7 @@ export default {
     },
     color: {
       type: String,
-      default: '#5c6b77'
+      default: 'inherit'
     },
     size: {
       type: Number,
