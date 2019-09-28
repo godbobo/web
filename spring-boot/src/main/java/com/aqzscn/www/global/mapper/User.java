@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,7 +28,9 @@ import java.util.List;
 @Setter
 @ApiModel("用户实体类")
 @JsonFilter("UserFilter")
+@Table(name = "g_user")
 public class User implements UserDetails {
+    @Id
     @ApiModelProperty("主键")
     private Long id;
 

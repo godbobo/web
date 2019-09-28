@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
@@ -13,8 +15,10 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel("系统参数表")
+@Table(name = "g_param")
 public class Param implements Serializable {
 
+    @Id
     @ApiModelProperty("主键")
     private Integer id;
 

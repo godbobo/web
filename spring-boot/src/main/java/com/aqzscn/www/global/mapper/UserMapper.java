@@ -13,7 +13,6 @@ import java.util.List;
  * @date 2019/5/26
  */
 @Component
-@Table(name = "g_user")
 public interface UserMapper extends Mapper<User> {
     /**
      * 根据登录名获取用户信息

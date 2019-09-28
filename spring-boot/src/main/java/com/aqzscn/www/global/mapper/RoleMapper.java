@@ -13,7 +13,6 @@ import java.util.List;
  * @date 2019/5/26
  */
 @Component
-@Table(name = "g_role")
 public interface RoleMapper extends Mapper<Role> {
 
     /**

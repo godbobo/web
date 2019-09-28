@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -12,8 +14,10 @@ import java.util.Date;
  */
 @Data
 @ApiModel("文件资源（包括图片）")
+@Table(name = "g_resource")
 public class Resource {
 
+    @Id
     @ApiModelProperty("资源主键")
     private Long id;
 

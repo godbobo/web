@@ -3,6 +3,8 @@ package com.aqzscn.www.global.mapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -11,8 +13,10 @@ import java.io.Serializable;
  * @date 2019/9/6 19:14
  */
 @ApiModel("字典表")
+@Table(name = "g_dict")
 public class Dict implements Serializable {
 
+    @Id
     @ApiModelProperty("主键")
     private Long id;
 

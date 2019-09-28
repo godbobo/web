@@ -81,6 +81,15 @@ public class DispatchController extends BaseController {
         return this.response(this.dispatchService.deleteDispatch(dispatch));
     }
 
+    @ApiOperation("切换中转服务")
+    @PutMapping("/dispatch-status")
+    public ReturnVo switchService(@Validated(ValidationGroup1.class) @RequestBody Dispatch dispatch, BindingResult result) throws RuntimeException {
+        if (result.hasErrors()) {
+            throw AppException.of(result.getAllErrors());
+        }
+        return this.response(this.dispatchService.switchDispatch(dispatch));
+    }
+
 
     @ApiOperation("中转post请求(仅支持POST JSON数据)")
     @PostMapping("/dispatch/**")
@@ -190,16 +199,3 @@ class CustomVo {
     private Object data;
 
 }
-
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Data
-//class CqmVo {
-//
-//    private String errorCode;
-//
-//    private String message;
-//
-//    private Object return;
-//
-//}

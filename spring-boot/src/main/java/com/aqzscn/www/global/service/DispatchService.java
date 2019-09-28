@@ -37,4 +37,11 @@ public interface DispatchService {
      */
     Boolean deleteDispatch(Dispatch dispatch);
 
+    /**
+     * 切换中转服务
+     * @param dispatch 转发服务对象
+     * @return 是否成功
+     */
+    Boolean switchDispatch(Dispatch dispatch);
+
 }

@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -17,7 +18,7 @@ public class Dispatch implements Serializable {
 
     @Id
     @ApiModelProperty("主键")
-    @NotBlank(message = "{dispatch.service.id.notnull}", groups = {ValidationGroup1.class})
+    @NotNull(message = "{dispatch.service.id.notnull}", groups = {ValidationGroup1.class})
     private Long id;
 
     @ApiModelProperty("服务名")

@@ -13,7 +13,6 @@ import java.util.List;
  * @date 2019/6/1
  */
 @Component
-@Table(name = "g_param")
 public interface ParamMapper extends Mapper<Param> {
 
     /**

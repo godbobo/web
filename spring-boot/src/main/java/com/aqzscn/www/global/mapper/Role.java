@@ -3,6 +3,8 @@ package com.aqzscn.www.global.mapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
@@ -15,7 +17,9 @@ import java.io.Serializable;
  * @date 2019/5/26
  */
 @ApiModel("角色实体类")
+@Table(name = "g_role")
 public class Role implements Serializable {
+    @Id
     @ApiModelProperty("主键")
     private Long id;
 

@@ -12,7 +12,6 @@ import java.util.List;
  * @date 2019/9/6 19:18
  */
 @Component
-@Table(name = "g_dict")
 public interface DictMapper extends Mapper<Dict> {
 
     /**

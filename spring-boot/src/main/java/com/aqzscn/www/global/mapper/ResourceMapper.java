@@ -12,7 +12,6 @@ import javax.persistence.Table;
  * @date 2019/6/5
  */
 @Component
-@Table(name = "g_resource")
 public interface ResourceMapper extends Mapper<Resource> {
 
     /**
