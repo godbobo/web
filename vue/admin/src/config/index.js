@@ -18,8 +18,8 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    // dev: 'http://web.frp.aqzscn.com/api/',
-    dev: 'http://127.0.0.1:521/api/',
+    dev: 'http://web.frp.aqzscn.com/api/',
+    // dev: 'http://127.0.0.1:521/api/',
     pro: 'http://web.frp.aqzscn.com/api/'
   },
   /**

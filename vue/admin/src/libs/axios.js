@@ -90,7 +90,7 @@ class HttpRequest {
         }
       } else { // 存在时提示用户错误信息
         Message.error({
-          content: errorInfo.data.msg
+          content: errorInfo.data.msg || `${errorInfo.data.status} ${errorInfo.data.error} 请求${errorInfo.data.path}失败,${errorInfo.data.message}`
         })
       }
       addErrorLog(errorInfo)

@@ -14,7 +14,7 @@
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
           <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
           <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
-          <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
+          <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader && isDevEnv" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </header-bar>
       </Header>
@@ -98,6 +98,10 @@ export default {
     },
     unreadCount () {
       return this.$store.state.user.unreadCount
+    },
+    // 开发环境
+    isDevEnv () {
+      return process.env.NODE_ENV === 'development'
     }
   },
   methods: {
@@ -110,8 +114,7 @@ export default {
       'closeTag'
     ]),
     ...mapActions([
-      'handleLogin',
-      'getUnreadMessageCount'
+      'handleLogin'
     ]),
     turnToPage (route) {
       let { name, params, query } = {}
@@ -181,8 +184,6 @@ export default {
         name: this.$config.homeName
       })
     }
-    // 获取未读消息条数
-    this.getUnreadMessageCount()
     // 在这里启动和销毁定时器的原因是在用户登录后这个页面一直存在，注销后这个页面就不存在了
     this.checkTokenTask = setInterval(() => {
       // 设置定时器自动刷新token 因为设置的误差时间是100秒 所以这里每40秒执行一次
