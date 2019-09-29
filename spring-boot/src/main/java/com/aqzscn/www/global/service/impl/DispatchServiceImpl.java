@@ -8,6 +8,8 @@ import com.aqzscn.www.global.mapper.DispatchMapper;
 import com.aqzscn.www.global.service.DispatchService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DispatchServiceImpl implements DispatchService {
 
     private final DispatchMapper dispatchMapper;
+    private final Logger logger = LoggerFactory.getLogger(DispatchService.class);
 
     public DispatchServiceImpl(DispatchMapper dispatchMapper) {
         this.dispatchMapper = dispatchMapper;
@@ -69,6 +72,7 @@ public class DispatchServiceImpl implements DispatchService {
             if (this.dispatchMapper.updateByDispatch(dispatchRequest) > 0) {
                 storeDispatch.setEnable(1);
                 GlobalCaches.DISPATCH = storeDispatch;
+                this.logger.info("转发服务已切换到【{}】,地址：{}", storeDispatch.getServiceName(), storeDispatch.getServiceUrl());
                 return true;
             }
         }

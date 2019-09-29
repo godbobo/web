@@ -28,3 +28,5 @@ myoptions:
     appid: wxc65b34467bd05206
     appsecret: 64c67f7fb7adc2c4b01a591586b760b0
     mytoken: 2b0zeal1cn9
+  service:
+    url: http://web.frp.aqzscn.com

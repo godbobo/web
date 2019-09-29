@@ -83,10 +83,10 @@ public class SystemInitializer implements ApplicationRunner {
 
         this.logger.info("正在初始化转发列表...");
         List<Dispatch> dispatches = this.dispatchMapper.selectAll();
-
         for (Dispatch d : dispatches) {
             if (d.getEnable() != null && d.getEnable().equals(1)) {
                 GlobalCaches.DISPATCH = d;
+                this.logger.info("当前转发服务为【{}】,地址：{}", d.getServiceName(), d.getServiceUrl());
                 break;
             }
         }
@@ -98,7 +98,7 @@ public class SystemInitializer implements ApplicationRunner {
             if (StringUtils.isNoneBlank(responseEntity.getBody())) {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(responseEntity.getBody());
-                GlobalCaches.PUBLIC_IP = root.get("data").get("host").toString();
+                GlobalCaches.PUBLIC_IP = root.get("data").get("host").asText("");
             }
         } catch (Exception e) {
             this.logger.error(e.getMessage());
