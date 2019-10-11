@@ -42,6 +42,7 @@ public class DispatchServiceImpl implements DispatchService {
         // 避免主键冲突
         dispatch.setId(null);
         dispatch.setEnable(0);
+        dispatch.setUsePath(1);
         return this.dispatchMapper.insert(dispatch) > 0;
     }
 

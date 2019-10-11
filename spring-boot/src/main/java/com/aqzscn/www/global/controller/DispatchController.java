@@ -91,111 +91,50 @@ public class DispatchController extends BaseController {
     }
 
 
-    @ApiOperation("中转post请求(仅支持POST JSON数据)")
-    @PostMapping("/dispatch/**")
-    public String post(@RequestBody String json) throws RuntimeException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            Dispatch dispatch = GlobalCaches.DISPATCH;
-            // 判断当前转发服务是否激活
-            if (dispatch == null) {
-                throw AppException.of("当前没有激活的转发服务，请激活后使用！");
-            }
-            // 判断是否需要处理请求数据
-            String reqBody = json;
-            if (StringUtils.isNotBlank(dispatch.getReqTargetParam())) {
-                // 对于请求数据，是否需要获取具体数据（仅支持第一层对象）
-                JsonNode node = objectMapper.readTree(json);
-                String objStr = objectMapper.writeValueAsString(node.get(dispatch.getReqTargetParam()));
-                if (StringUtils.isNotBlank(dispatch.getReqPrefix())) {
-                    reqBody = "jsonRest=" + objStr;
-                } else {
-                    reqBody = objStr;
-                }
-            }
-            // URL地址
-            ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(dispatch.getServiceUrl(), reqBody, String.class);
-            // 判断是否需要处理响应数据
-            if (StringUtils.isNotBlank(dispatch.getResBody()) && StringUtils.isNotBlank(dispatch.getResDataKey())) {
-                JsonNode node = objectMapper.readTree(dispatch.getResBody());
-                Map<String, Object> map = new HashMap<>();
-                Iterator<String> names = node.fieldNames();
-                while (names.hasNext()) {
-                    String name = names.next();
-                    if (name.equals(dispatch.getResDataKey())) {
-                        map.put(name, objectMapper.readTree(responseEntity.getBody()));
-                    } else {
-                        map.put(name, node.get(name));
-                    }
-                }
-                return objectMapper.writeValueAsString(map);
-            } else {
-                return responseEntity.getBody();
-            }
-        } catch (Exception e) {
-            throw AppException.of(e.getMessage());
-        }
-    }
-
-    @PostMapping("/dispatch/user/reluser/byopenid")
-    public CustomVo byopenid() throws RuntimeException {
-        CustomVo vo = new CustomVo();
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode node = objectMapper.readTree("{\"RelUser\":{\"appid\":\"wx8a66989d34571ce0\",\"defaultrelapp\":\"1\",\"openid\":\"oBbT400YOp196crc2LPGslMfj0Ms\",\"relappid\":\"10\",\"relappname\":\"浙一\",\"reluserid\":\"10103484\"}}");
-            vo.setData(node);
-            vo.setCode(0);
-            vo.setMsg("操作成功");
-        } catch (Exception e) {
-            vo.setCode(1000);
-            vo.setMsg("处理失败");
-        }
-        return vo;
-    }
-
-    @PostMapping("/dispatch/relserver/getall")
-    public CustomVo getall() throws RuntimeException {
-        CustomVo vo = new CustomVo();
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode node = objectMapper.readTree("{\"relServerList\":[{\"relappid\":\"10\",\"relappname\":\"zy\",\"remark\":\"本地\",\"url\":\"http://127.0.0.1:82/cqm\"},{\"relappid\":\"11\",\"relappname\":\"ze\",\"remark\":\"本地\",\"url\":\"http://127.0.0.1:82/cqm\"},{\"relappid\":\"16\",\"relappname\":\"tt\",\"remark\":\"天坛\",\"url\":\"http://192.168.3.174:82/cqm/\"}]}");
-            vo.setData(node);
-            vo.setCode(0);
-            vo.setMsg("操作成功");
-        } catch (Exception e) {
-            vo.setCode(1000);
-            vo.setMsg("处理失败");
-        }
-        return vo;
-    }
-
-    @PostMapping("/dispatch/user/bindrelation")
-    public CustomVo bind() {
-        CustomVo vo = new CustomVo();
-        vo.setCode(0);
-        vo.setMsg("操作成功");
-        return vo;
-    }
-
-    @PostMapping("/dispatch/user/unbindrelation")
-    public CustomVo unbind() {
-        CustomVo vo = new CustomVo();
-        vo.setCode(0);
-        vo.setMsg("操作成功");
-        return vo;
-    }
-
-}
-
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-class CustomVo {
-
-    private Integer code;
-
-    private String msg;
-
-    private Object data;
+//    @ApiOperation("中转post请求(仅支持POST JSON数据)")
+//    @PostMapping("/dispatch/**")
+//    public String post(@RequestBody String json) throws RuntimeException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            Dispatch dispatch = GlobalCaches.DISPATCH;
+//            // 判断当前转发服务是否激活
+//            if (dispatch == null) {
+//                throw AppException.of("当前没有激活的转发服务，请激活后使用！");
+//            }
+//            // 判断是否需要处理请求数据
+//            String reqBody = json;
+//            if (StringUtils.isNotBlank(dispatch.getReqTargetParam())) {
+//                // 对于请求数据，是否需要获取具体数据（仅支持第一层对象）
+//                JsonNode node = objectMapper.readTree(json);
+//                String objStr = objectMapper.writeValueAsString(node.get(dispatch.getReqTargetParam()));
+//                if (StringUtils.isNotBlank(dispatch.getReqPrefix())) {
+//                    reqBody = "jsonRest=" + objStr;
+//                } else {
+//                    reqBody = objStr;
+//                }
+//            }
+//            // URL地址
+//            ResponseEntity<String> responseEntity = this.restTemplate.postForEntity(dispatch.getServiceUrl(), reqBody, String.class);
+//            // 判断是否需要处理响应数据
+//            if (StringUtils.isNotBlank(dispatch.getResBody()) && StringUtils.isNotBlank(dispatch.getResDataKey())) {
+//                JsonNode node = objectMapper.readTree(dispatch.getResBody());
+//                Map<String, Object> map = new HashMap<>();
+//                Iterator<String> names = node.fieldNames();
+//                while (names.hasNext()) {
+//                    String name = names.next();
+//                    if (name.equals(dispatch.getResDataKey())) {
+//                        map.put(name, objectMapper.readTree(responseEntity.getBody()));
+//                    } else {
+//                        map.put(name, node.get(name));
+//                    }
+//                }
+//                return objectMapper.writeValueAsString(map);
+//            } else {
+//                return responseEntity.getBody();
+//            }
+//        } catch (Exception e) {
+//            throw AppException.of(e.getMessage());
+//        }
+//    }
 
 }
