@@ -18,9 +18,9 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://web.frp.aqzscn.com/api/',
-    // dev: 'http://127.0.0.1:521/api/',
-    pro: 'http://web.frp.aqzscn.com/api/'
+    // dev: 'http://web.frp.aqzscn.com/api/',
+    dev: 'http://127.0.0.1:521/api/',
+    pro: 'http://api.aqzscn.com/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

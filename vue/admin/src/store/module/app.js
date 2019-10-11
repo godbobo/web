@@ -1,6 +1,5 @@
 import {
   getBreadCrumbList,
-  setTagNavListInLocalstorage,
   getMenuByRouter,
   getTagNavListFromLocalstorage,
   getHomeRoute,
@@ -57,7 +56,7 @@ export default {
         tagList.unshift(homeTag)
       }
       state.tagNavList = tagList
-      setTagNavListInLocalstorage([...tagList])
+      // setTagNavListInLocalstorage([...tagList])
     },
     closeTag (state, route) {
       let tag = state.tagNavList.filter(item => routeEqual(item, route))
@@ -73,7 +72,7 @@ export default {
           if (router.name === homeName) state.tagNavList.unshift(router)
           else state.tagNavList.splice(1, 0, router)
         }
-        setTagNavListInLocalstorage([...state.tagNavList])
+        // setTagNavListInLocalstorage([...state.tagNavList])
       }
     },
     setLocal (state, lang) {
