@@ -206,13 +206,16 @@ export default {
     async handleSaveService () {
       this.serviceSaveLoading = true
       try {
+        const params = {
+          data: this.selectedService
+        }
         if (this.selectedService.id) {
           // 修改
-          await this.putDispatches(this.selectedService)
+          await this.putDispatches(params)
           this.handleDispatches()
         } else {
           // 新增
-          await this.postDispatches(this.selectedService)
+          await this.postDispatches(params)
           this.handleDispatches()
         }
       } catch (e) {

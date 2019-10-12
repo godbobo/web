@@ -44,6 +44,9 @@ public class Dispatch implements Serializable {
     @ApiModelProperty("是否启用")
     private Integer enable;
 
+    @ApiModelProperty("是否拼接路径")
+    private Integer usePath;
+
     public Long getId() {
         return id;
     }
@@ -106,5 +109,13 @@ public class Dispatch implements Serializable {
 
     public void setEnable(Integer enable) {
         this.enable = enable;
+    }
+
+    public Integer getUsePath() {
+        return usePath;
+    }
+
+    public void setUsePath(Integer usePath) {
+        this.usePath = usePath;
     }
 }

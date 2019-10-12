@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.global.mapper.MockMapper">
+
+    <resultMap id="baseResultMap" type="com.aqzscn.www.global.mapper.Mock">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="resbody" jdbcType="VARCHAR" property="resbody"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="method" jdbcType="VARCHAR" property="method"/>
+        <result column="dispatch_id" jdbcType="BIGINT" property="dispatchId"/>
+    </resultMap>
+
+    <resultMap id="voResultMap" type="com.aqzscn.www.global.domain.vo.MockRequest" extends="baseResultMap">
+        <result column="dispatch_name" jdbcType="VARCHAR" property="dispatchName"/>
+    </resultMap>
+
+    <select id="selectMocks" parameterType="com.aqzscn.www.global.domain.vo.MockRequest" resultMap="voResultMap">
+        select a.*, gd.service_name dispatch_name from g_mock a left join g_dispatch gd on a.dispatch_id = gd.id
+        where 1 = 1
+        <if test="path != null and path != ''">
+            and a.path = #{path}
+        </if>
+        <if test="method != null and method != ''">
+            and a.method = #{method}
+        </if>
+        <if test="dispatchId != null">
+            and a.dispatch_id = #{dispatchId}
+        </if>
+    </select>
+
+</mapper>

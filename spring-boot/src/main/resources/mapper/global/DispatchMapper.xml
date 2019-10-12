@@ -10,6 +10,7 @@
         <result column="req_prefix" jdbcType="VARCHAR" property="reqPrefix" />
         <result column="res_body" jdbcType="VARCHAR" property="resBody" />
         <result column="res_data_key" jdbcType="VARCHAR" property="resDataKey" />
+        <result column="use_path" javaType="INTEGER" property="usePath" />
     </resultMap>
 
     <update id="updateByDispatch" parameterType="com.aqzscn.www.global.domain.vo.DispatchRequest">

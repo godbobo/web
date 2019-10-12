@@ -1,5 +1,13 @@
 {
   "presets": [
     "@vue/app"
+  ],
+  "plugins": [
+    ["prismjs", {
+        "languages": ["javascript", "css", "markup", "json"],
+        "plugins": ["line-numbers"],
+        "theme": "default",
+        "css": true
+    }]
   ]
 }
