@@ -1,4 +1,4 @@
-/vue/admin/src/config/index.js merge=ours
-/spring-boot/src/main/resources/application.yml merge=ours
-/spring-boot/src/main/resources/application-dev.yml merge=ours
-/spring-boot/src/main/resources/application-prod.yml merge=ours
+spring-boot/src/main/resources/application-dev.yml merge=ours
+spring-boot/src/main/resources/application-prod.yml merge=ours
+spring-boot/src/main/resources/application.yml merge=ours
+vue/admin/src/config/index.js merge=ours
