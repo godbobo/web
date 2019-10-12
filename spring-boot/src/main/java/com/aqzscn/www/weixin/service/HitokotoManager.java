@@ -1,21 +1,19 @@
 package com.aqzscn.www.weixin.service;
 
+import com.aqzscn.www.global.component.SpringContextUtil;
 import com.aqzscn.www.global.util.JacksonUtil;
-import com.aqzscn.www.global.util.LettuceUtil;
 import com.aqzscn.www.weixin.domain.CustomFilter;
 import com.aqzscn.www.weixin.domain.vo.Hitokoto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.aqzscn.www.weixin.utils.WrapperUtil;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import weixin.popular.bean.message.EventMessage;
 
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * 一言服务
+ *
  * @author Godbobo
  * @version 1.0
  * @date 2019/9/6 18:28
@@ -27,38 +25,25 @@ public class HitokotoManager implements CustomFilter {
 
     private final String url = "https://v1.hitokoto.cn";
 
-    private final RestTemplate restTemplate = new RestTemplate();
-
     private final String key = "3";
 
-    @Value("${spring.redis.keyPrefix.all}${spring.redis.keyPrefix.wxfunc}")
+    private final String moduleName = "message.";
+
     private String redisPrefix;
 
-    private LettuceUtil lettuceUtil = new LettuceUtil();
+    private RedisTemplate<String, Object> redisTemplate = SpringContextUtil.getBean(RedisTemplate.class);
 
-//    public HitokotoManager(RestTemplate restTemplate) {
-//        this.restTemplate = restTemplate;
-//    }
+    private RestTemplate restTemplate = SpringContextUtil.getBean(RestTemplate.class);
 
-    @Override
-    public String getResult() {
-        return this.res;
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
+    public HitokotoManager() {
+        this.redisPrefix = SpringContextUtil.getProperty("spring.redis.keyPrefix.all", String.class) + SpringContextUtil.getProperty("spring.redis.keyPrefix.wxfunc", String.class);
     }
 
     @Override
     public boolean next(EventMessage eventMessage) {
         // 进入一言功能，30分钟内退出
         if (eventMessage.getContent().equals(this.key)) {
-            String k = this.redisPrefix + eventMessage.getFromUserName();
-            this.lettuceUtil.set(key, this.key);
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, 30);
-            this.lettuceUtil.expireAt(k, calendar.getTime());
+            WrapperUtil.enterModule(eventMessage, this.redisPrefix, this.moduleName, this.redisTemplate, this.key);
             this.res = "欢迎使用一言，回复以下数字使用对应功能：";
             return false;
         }
@@ -71,5 +56,15 @@ public class HitokotoManager implements CustomFilter {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public String getResult() {
+        return this.res;
+    }
+
+    @Override
+    public String getKey() {
+        return this.key;
     }
 }

@@ -1,16 +1,13 @@
 package com.aqzscn.www.weixin.service;
 
-import com.aqzscn.www.global.util.LettuceUtil;
+import com.aqzscn.www.global.component.SpringContextUtil;
 import com.aqzscn.www.weixin.domain.CustomFilter;
+import com.aqzscn.www.weixin.utils.WrapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import weixin.popular.bean.message.EventMessage;
-
-import java.util.Calendar;
 
 /**
  * @author Godbobo
@@ -26,11 +23,28 @@ public class MoneyManager implements CustomFilter {
 
     private final String key = "1";
 
-    @Value("${spring.redis.keyPrefix.all}${spring.redis.keyPrefix.wxfunc}")
+    private final String moduleName = "message.";
+
     private String redisPrefix;
 
-    @Autowired
-    private RedisTemplate  redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate = SpringContextUtil.getBean(RedisTemplate.class);
+
+    public MoneyManager() {
+        this.redisPrefix = SpringContextUtil.getProperty("spring.redis.keyPrefix.all", String.class) + SpringContextUtil.getProperty("spring.redis.keyPrefix.wxfunc", String.class);
+    }
+
+    @Override
+    public boolean next(EventMessage eventMessage) {
+        if (eventMessage.getContent().equals(this.key)) {
+            WrapperUtil.enterModule(eventMessage, this.redisPrefix, this.moduleName, this.redisTemplate, this.key);
+            this.res = "欢迎使用记账，回复以下数字使用对应功能：";
+            return false;
+        }
+        this.logger.info("我是记账相关服务管理者");
+        this.res = eventMessage.getContent() + ":money";
+        return true;
+    }
+
 
     @Override
     public String getResult() {
@@ -40,21 +54,5 @@ public class MoneyManager implements CustomFilter {
     @Override
     public String getKey() {
         return this.key;
-    }
-
-    @Override
-    public boolean next(EventMessage eventMessage) {
-        if (eventMessage.getContent().equals(this.key)) {
-            String k = this.redisPrefix + eventMessage.getFromUserName();
-            this.redisTemplate.opsForValue().set(k, this.key);
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, 30);
-            this.redisTemplate.expireAt(k, calendar.getTime());
-            this.res = "欢迎使用记账，回复以下数字使用对应功能：";
-            return false;
-        }
-        this.logger.info("我是记账相关服务管理者");
-        this.res = eventMessage.getContent() + ":money";
-        return true;
     }
 }
