@@ -19,8 +19,8 @@ spring:
     continue-on-error: true
   redis:
     keyPrefix:
-      all: com.aqzscn.www.
-      wxfunc: weixin.func.
+      all: "com.aqzscn.web:"
+      wxfunc: "weixin.modules:"
     lettuce:
       pool:
         max-active: 8 #最大连接数
