@@ -2,10 +2,13 @@ spring:
   profiles:
     active: dev
   mail:
+    # 邮箱配置，我这里配置的是QQ邮箱
     host: smtp.qq.com
     port: 587
-    username: 980742324@qq.com
-    password: mtdomlplzqkzbbce
+    # 邮箱账号
+    username: xxx@qq.com
+    # 授权码，不是密码。。
+    password: inputYourCode
     properties:
       mail:
         smtp:
@@ -45,8 +48,9 @@ mybatis:
     - classpath:mapper/blog/*.xml
     - classpath:mapper/global/*.xml
 mail:
+  # 配置邮箱发送者的信息
   fromMail:
-    addr: 980742324@qq.com
+    addr: xxx@qq.com
 myoptions:
   weixin:
     hitokoto:

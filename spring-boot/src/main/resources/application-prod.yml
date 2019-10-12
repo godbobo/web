@@ -26,8 +26,10 @@ myoptions:
     defaultimg: https://file.iviewui.com/asd/asd-u-10.png
   weixin:
     enable: true
-    appid: wxc65b34467bd05206
-    appsecret: 64c67f7fb7adc2c4b01a591586b760b0
-    mytoken: 2b0zeal1cn9
+    # 微信公众号配置信息
+    appid: wxAppId
+    appsecret: inputYourAppSecret
+    mytoken: inputYourToken
   service:
-    url: http://api.aqzscn.cn
+    # 启动时访问地址，配置为服务运行的地址
+    url: http://api.aqzscn.com
