@@ -2,7 +2,7 @@ export default {
   // 配置显示在浏览器标签的title
   title: '爱情终是残念',
   // oauth认证所需的客户端信息
-  client: 'cGFzc3dvcmQ6MTIz',
+  client: 'input your client id',
   // @description refresh_token在localstorage中存储的时间，默认7天
   refreshTokenExpires: 604800,
   /**
