@@ -6,9 +6,9 @@ spring:
     host: smtp.qq.com
     port: 587
     # 邮箱账号
-    username: xxx@qq.com
+    username: 980742324@qq.com
     # 授权码，不是密码。。
-    password: inputYourCode
+    password: mtdomlplzqkzbbce
     properties:
       mail:
         smtp:
@@ -50,7 +50,7 @@ mybatis:
 mail:
   # 配置邮箱发送者的信息
   fromMail:
-    addr: xxx@qq.com
+    addr: 980742324@qq.com
 myoptions:
   weixin:
     hitokoto:

@@ -171,6 +171,7 @@ public class UtilsController extends BaseController {
         if (path.equals("")) {
             return null;
         }
+
         String method = this.request.getMethod();
         Mock mock = new Mock();
         mock.setDispatchId(dispatchId);
