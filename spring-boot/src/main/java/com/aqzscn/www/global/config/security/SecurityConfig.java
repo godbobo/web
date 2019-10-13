@@ -4,16 +4,12 @@ import com.aqzscn.www.global.domain.dto.IErrorCode;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.domain.dto.ValidationResult;
 import com.aqzscn.www.global.service.impl.UserServiceImpl;
-import com.aqzscn.www.global.util.BeanRevertHelper;
+import com.aqzscn.www.global.util.JacksonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,14 +17,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -164,8 +155,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter out = httpServletResponse.getWriter();
                     httpServletResponse.setStatus(200);
-                    ObjectMapper mapper = new ObjectMapper();
-                    out.write(BeanRevertHelper.hideUserInfo(vo));
+                    out.write(JacksonUtil.me().filter("UserFilter", "password").toJson(vo));
                     out.flush();
                     out.close();
                 })

@@ -80,7 +80,7 @@ class HttpRequest {
     }, error => {
       this.destroy(url)
       let errorInfo = error.response
-      console.debug('请求', url, '失败，错误信息为：', errorInfo ? JSON.stringify(errorInfo.data) : '')
+      console.error('请求', url, '失败，错误信息为：', errorInfo ? JSON.stringify(errorInfo.data) : '')
       if (!errorInfo) {
         const { request: { statusText, status }, config } = JSON.parse(JSON.stringify(error))
         errorInfo = {
@@ -89,8 +89,18 @@ class HttpRequest {
           request: { responseURL: config.url }
         }
       } else { // 存在时提示用户错误信息
+        let message = errorInfo.data.msg || `${errorInfo.data.status} ${errorInfo.data.error} 请求${errorInfo.data.path}失败,${errorInfo.data.message}`
+        const errors = errorInfo.data.errors
+        if (errors && errors.length > 1) {
+          let str = ''
+          for (let i = 1; i < errors.length; i++) {
+            str += errors[i].title + ','
+          }
+          str = str.substr(0, str.length - 1)
+          message += ':' + str
+        }
         Message.error({
-          content: errorInfo.data.msg || `${errorInfo.data.status} ${errorInfo.data.error} 请求${errorInfo.data.path}失败,${errorInfo.data.message}`
+          content: message
         })
       }
       addErrorLog(errorInfo)

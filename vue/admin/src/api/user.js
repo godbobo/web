@@ -52,3 +52,24 @@ export const getUserInfo = () => {
     method: 'get'
   })
 }
+
+/**
+ * 添加用户
+ * @param {*} email 邮箱
+ * @param {*} password 密码
+ * @param {*} username 昵称
+ * @param {*} realName 姓名
+ * @param {*} sign 签名
+ * @param {*} gender 性别
+ * @param {*} headImg 头像
+ * @param {*} tel 电话
+ */
+export const addUser = ({ email = '', password = '', username = '', realName = '', sign = '', gender = '', headImg = '', tel = '' }) => {
+  return axios.request({
+    url: 'g/users',
+    method: 'post',
+    data: {
+      email, password, username, realName, sign, gender, headImg, tel
+    }
+  })
+}

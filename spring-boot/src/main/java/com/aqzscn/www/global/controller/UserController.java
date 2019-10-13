@@ -6,15 +6,13 @@ import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.mapper.User;
 import com.aqzscn.www.global.service.UserService;
-import com.aqzscn.www.global.util.BeanRevertHelper;
+import com.aqzscn.www.global.util.JacksonUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
@@ -54,9 +52,9 @@ public class UserController extends BaseController {
         if (userDetails instanceof User){
             ReturnVo vo = new ReturnVo();
             vo.setData(userDetails);
-            return BeanRevertHelper.hideUserInfo(vo);
+            return JacksonUtil.me().filter("UserFilter", "password").toJson(vo);
         }
-        return BeanRevertHelper.hideUserInfo(this.userService.getUserInfo(userDetails.getUsername()));
+        return JacksonUtil.me().filter("UserFilter", "password").toJson(this.userService.getUserInfo(userDetails.getUsername()));
     }
 
     @GetMapping("/token-page")

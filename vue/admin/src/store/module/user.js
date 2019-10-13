@@ -1,9 +1,6 @@
-import {
-  login,
-  refreshToken,
-  getUserInfo
-} from '@/api/user'
+import * as user from '@/api/user'
 import { setToken, setRefreshToken, getRefreshToken } from '@/libs/util'
+import { apiResponse } from '@/libs/tools'
 
 // 重新设计 token
 // 1 store存储access_token  localstorage存储refresh_token
@@ -38,7 +35,7 @@ export default {
     handleLogin ({ commit }, { userName, password }) {
       userName = userName.trim()
       return new Promise((resolve, reject) => {
-        login({
+        user.login({
           username: userName,
           password
         }).then(data => {
@@ -67,7 +64,7 @@ export default {
         }
         // 刷新token之前一定要确保localstorage中没有token，否则全局添加token的机制会替换掉刷新token特有的请求头
         setToken(null, null, null, true)
-        refreshToken(reToken.token).then(data => {
+        user.refreshToken(reToken.token).then(data => {
           // 响应内容应该包括access_token,refresh_token,expires,token_type,scope
           // 1 保存access_token
           setToken(data.access_token, data.expires_in, data.token_type)
@@ -91,7 +88,7 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(data => {
+        user.getUserInfo(state.token).then(data => {
           commit('setAvatar', data.headImg)
           commit('setUserName', data.realName)
           commit('setUserId', data.id)
@@ -109,6 +106,10 @@ export default {
           reject(err)
         })
       })
+    },
+    // 添加用户
+    addUser ({ commit }, param) {
+      return apiResponse(user.addUser, param)
     }
   }
 }

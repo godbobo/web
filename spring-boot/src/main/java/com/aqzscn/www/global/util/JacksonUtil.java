@@ -1,10 +1,13 @@
 package com.aqzscn.www.global.util;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 import java.text.SimpleDateFormat;
@@ -40,12 +43,33 @@ public class JacksonUtil {
     }
 
     /**
+     * 过滤对象中的某些字段
+     * @param filterName 过滤器名称
+     * @param properties 要过滤掉的属性列表
+     */
+    public JacksonUtil filter(String filterName, String... properties) {
+        FilterProvider filterProvider = new SimpleFilterProvider().addFilter(filterName,
+                SimpleBeanPropertyFilter.serializeAllExcept(properties));
+        mapper.setFilterProvider(filterProvider);
+        return this;
+    }
+
+    /**
      * 转换对象为json串
      * @param obj 要转换的对象
      * @return json
      */
     public String toJson(Object obj) {
         try {
+            // 检查对象是否包含jsonfilter注解,如果有则使用过滤器转换
+            if (obj != null) {
+                Class clazz = obj.getClass();
+                JsonFilter filter = (JsonFilter) clazz.getAnnotation(JsonFilter.class);
+                if (filter != null) {
+                    String filterName = filter.value();
+                    filter(filterName, "");
+                }
+            }
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,13 +79,19 @@ public class JacksonUtil {
 
     /**
      * 转换对象为json串
-     * @param filterProvider 对属性进行过滤
      * @param obj 要转换的对象
+     * @param properties 要过滤的字段
      * @return json
      */
-    String toJson(SimpleFilterProvider filterProvider, Object obj) {
+    public String toJson(Object obj, String... properties) {
         try {
-            mapper.setFilterProvider(filterProvider);
+            // 检查对象是否包含jsonfilter注解,如果有则使用过滤器转换
+            Class clazz = obj.getClass();
+            JsonFilter filter = (JsonFilter) clazz.getAnnotation(JsonFilter.class);
+            if (filter != null) {
+                String filterName = filter.value();
+                filter(filterName, properties);
+            }
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             e.printStackTrace();

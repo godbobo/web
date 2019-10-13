@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private Long id;
 
     @ApiModelProperty("姓名")
-    @NotBlank(message = "{user.realName.notblank}", groups = {ValidationGroup1.class})
+    @NotBlank(message = "{user.realname.notblank}", groups = {ValidationGroup1.class})
     private String realName;
 
     @ApiModelProperty("密码")
@@ -81,9 +81,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role: roles){
-            // 基于数据库的角色认证需要加上 ROLE_ 前缀
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        if (roles != null) {
+            for (Role role: roles){
+                // 基于数据库的角色认证需要加上 ROLE_ 前缀
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+            }
         }
         return authorities;
     }
@@ -101,7 +103,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-        return locked == 0;
+        return locked != null && locked == 0;
     }
 
     /**
@@ -117,7 +119,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return enabled == 1;
+        return enabled != null && enabled == 1;
     }
 
     public Long getId() {
@@ -170,5 +172,57 @@ public class User implements UserDetails {
 
     public Date getRegTime() {
         return regTime;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg;
+    }
+
+    public void setLocked(Integer locked) {
+        this.locked = locked;
+    }
+
+    public void setEnabled(Integer enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public void setRegTime(Date regTime) {
+        this.regTime = regTime;
     }
 }
