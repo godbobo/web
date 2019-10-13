@@ -55,3 +55,6 @@ myoptions:
   weixin:
     hitokoto:
       url:
+  global:
+    # 注册时是否验证用户邮箱
+    user-email-validate: true
