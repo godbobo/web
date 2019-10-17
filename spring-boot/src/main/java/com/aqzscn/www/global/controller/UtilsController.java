@@ -116,7 +116,8 @@ public class UtilsController extends BaseController {
             if (StringUtils.isNotBlank(dispatch.getReqTargetParam()) && StringUtils.isNotBlank(json)) {
                 // 对于请求数据，是否需要获取具体数据（仅支持第一层对象）
                 JsonNode node = objectMapper.readTree(json);
-                String objStr = node.get(dispatch.getReqTargetParam()).asText("");
+                // 必须用toString才能正常获取node中的json字符串
+                String objStr = node.findValue(dispatch.getReqTargetParam()).toString();
                 if (StringUtils.isNotBlank(dispatch.getReqPrefix())) {
                     reqBody = dispatch.getReqPrefix() + objStr;
                 } else {

@@ -12,3 +12,5 @@
 ## 20191010 更新记录
 
 1. 解决插入mysql中文乱码问题
+2. 修复打包后运行时报SpringContextUtil.getBean()为null的错误
+3. 修复转发接口不能转发json字符串的问题

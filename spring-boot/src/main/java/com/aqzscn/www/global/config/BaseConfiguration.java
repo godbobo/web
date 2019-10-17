@@ -1,5 +1,6 @@
 package com.aqzscn.www.global.config;
 
+import com.aqzscn.www.global.component.SpringContextUtil;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -22,6 +23,11 @@ public class BaseConfiguration {
     //正常启用的https端口 如443
     @Value("${server.port}")
     Integer httpsPort;
+
+//    @Bean
+//    public SpringContextUtil springContextUtil() {
+//        return new SpringContextUtil();
+//    }
 
     // springboot2 写法
 //    @Bean

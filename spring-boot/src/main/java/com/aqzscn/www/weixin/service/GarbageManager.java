@@ -5,6 +5,7 @@ import com.aqzscn.www.weixin.domain.CustomFilter;
 import com.aqzscn.www.weixin.utils.WrapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import weixin.popular.bean.message.EventMessage;
@@ -14,6 +15,7 @@ import weixin.popular.bean.message.EventMessage;
  * @version 1.0
  * @date 2019/9/5 20:54
  */
+@DependsOn("springContextUtil")
 @Component
 public class GarbageManager implements CustomFilter {
 

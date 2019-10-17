@@ -5,6 +5,7 @@ import com.aqzscn.www.global.util.JacksonUtil;
 import com.aqzscn.www.weixin.domain.CustomFilter;
 import com.aqzscn.www.weixin.domain.vo.Hitokoto;
 import com.aqzscn.www.weixin.utils.WrapperUtil;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import weixin.popular.bean.message.EventMessage;
  * @date 2019/9/6 18:28
  */
 @Component
+@DependsOn("springContextUtil")
 public class HitokotoManager implements CustomFilter {
 
     private String res;

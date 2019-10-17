@@ -3,22 +3,13 @@ package com.aqzscn.www.global.controller;
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
 import com.aqzscn.www.global.config.validation.ValidationGroup2;
 import com.aqzscn.www.global.domain.co.AppException;
-import com.aqzscn.www.global.domain.co.GlobalCaches;
 import com.aqzscn.www.global.domain.dto.MyPage;
 import com.aqzscn.www.global.domain.dto.PageRequest;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
 import com.aqzscn.www.global.mapper.Dispatch;
 import com.aqzscn.www.global.service.DispatchService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 @RestController
 @Api(tags = "请求中转服务")

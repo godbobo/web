@@ -7,6 +7,7 @@ import com.aqzscn.www.weixin.service.MoneyManager;
 import com.aqzscn.www.weixin.service.WeixinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import weixin.popular.bean.message.EventMessage;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@DependsOn("springContextUtil")
 public class WeixinServiceImpl implements WeixinService {
 
     private final List<CustomFilter> filters = new ArrayList<>();
