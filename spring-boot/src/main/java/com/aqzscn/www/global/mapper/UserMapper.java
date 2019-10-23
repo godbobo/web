@@ -40,12 +40,18 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 为用户设置角色
-     *
      * @param uid 用户主键
      * @param rid 角色主键
      * @return 影响行数
      */
     int setRoles(Long uid, Long rid);
+
+    /**
+     * 删除用户角色
+     * @param uid 用户主键
+     * @param rid 角色主键
+     */
+    int deleteRoles(Long uid, Long rid);
 
     /**
      * 修改用户信息
@@ -54,5 +60,8 @@ public interface UserMapper extends Mapper<User> {
      * @return 影响行数
      */
     int update(User user);
+
+    // 查询用户列表
+    List<User> selectUser(User user);
 
 }

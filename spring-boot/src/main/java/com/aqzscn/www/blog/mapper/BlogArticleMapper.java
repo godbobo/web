@@ -31,6 +31,13 @@ public interface BlogArticleMapper extends Mapper<BlogArticle> {
      */
     List<BlogArticle> selectNoSeries();
 
+    /**
+     * 查询文章
+     * @param articleRequest
+     * @return
+     */
+    List<BlogArticle> selectArticles(ArticleRequest articleRequest);
+
 
     /**
      * 根据主键更新文章

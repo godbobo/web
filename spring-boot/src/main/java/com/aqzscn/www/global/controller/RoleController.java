@@ -9,13 +9,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 角色请求接口
@@ -42,6 +41,22 @@ public class RoleController extends BaseController {
             throw AppException.of(result.getAllErrors());
         }
         return response(this.roleService.addRole(role));
+    }
+
+    @GetMapping("/roles")
+    @ApiOperation("获取角色列表")
+    public ReturnVo selectRole() throws RuntimeException {
+        ReturnVo vo = new ReturnVo();
+        Map<String, Object> res = new HashMap<>(1);
+        res.put("lst", roleService.selectAllRoles());
+        vo.setData(res);
+        return vo;
+    }
+
+    @DeleteMapping("/roles")
+    @ApiOperation("删除角色")
+    public ReturnVo deleteRole(Role role) throws RuntimeException {
+        return null;
     }
 
 }

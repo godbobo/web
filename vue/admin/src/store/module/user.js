@@ -110,6 +110,30 @@ export default {
     // 添加用户
     addUser ({ commit }, param) {
       return apiResponse(user.addUser, param)
+    },
+    // 查询用户
+    selectUser ({ commit }, param) {
+      return apiResponse(user.selectUser, param)
+    },
+    // 编辑用户
+    editUser ({ commit }, param) {
+      return apiResponse(user.editUser, param)
+    },
+    // 获取角色列表
+    getRoles () {
+      return apiResponse(user.getRoles)
+    },
+    // 添加角色
+    addRole ({ commit }, param) {
+      return apiResponse(user.addRole, param)
+    },
+    // 根据用户id获取角色列表
+    getRolesByUid ({ commit }, param) {
+      return apiResponse(user.getRolesByUid, param)
+    },
+    // 修改用户角色
+    updateUserRoles ({ commit }, param) {
+      return apiResponse(user.updateUserRoles, param)
     }
   }
 }

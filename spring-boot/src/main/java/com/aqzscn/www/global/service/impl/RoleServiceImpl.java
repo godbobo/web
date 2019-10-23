@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 角色服务
  *
@@ -33,5 +35,10 @@ public class RoleServiceImpl implements RoleService {
         }else {
             return false;
         }
+    }
+
+    @Override
+    public List<Role> selectAllRoles() {
+        return roleMapper.selectAll();
     }
 }

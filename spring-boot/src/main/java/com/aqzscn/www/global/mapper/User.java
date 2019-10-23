@@ -1,6 +1,8 @@
 package com.aqzscn.www.global.mapper;
 
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
+import com.aqzscn.www.global.config.validation.ValidationGroup2;
+import com.aqzscn.www.global.config.validation.ValidationGroup3;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,12 +32,16 @@ import java.util.List;
 @JsonFilter("UserFilter")
 @Table(name = "g_user")
 public class User implements UserDetails {
+    // Group1 插入时验证
+    // Group2 修改时验证
+    // Group3 修改角色信息时验证
     @Id
     @ApiModelProperty("主键")
+    @NotNull(message = "用户id必须传入", groups = {ValidationGroup2.class, ValidationGroup3.class})
     private Long id;
 
     @ApiModelProperty("姓名")
-    @NotBlank(message = "{user.realname.notblank}", groups = {ValidationGroup1.class})
+//    @NotBlank(message = "{user.realname.notblank}", groups = {ValidationGroup1.class})
     private String realName;
 
     @ApiModelProperty("密码")
@@ -174,55 +180,5 @@ public class User implements UserDetails {
         return regTime;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
-
-    public void setTel(String tel) {
-        this.tel = tel;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setHeadImg(String headImg) {
-        this.headImg = headImg;
-    }
-
-    public void setLocked(Integer locked) {
-        this.locked = locked;
-    }
-
-    public void setEnabled(Integer enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
-
-    public void setRegTime(Date regTime) {
-        this.regTime = regTime;
-    }
 }

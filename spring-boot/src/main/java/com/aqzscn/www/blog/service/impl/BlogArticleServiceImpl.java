@@ -80,13 +80,13 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     public MyPage select(ArticleRequest articleRequest) throws RuntimeException {
         // 启动分页辅助类
         PageHelper.startPage(articleRequest.getPageRequest());
-        PageInfo<BlogArticle> pageInfo = new PageInfo<>(this.articleMapper.select(articleRequest));
+        PageInfo<BlogArticle> pageInfo = new PageInfo<>(this.articleMapper.selectArticles(articleRequest));
         return new MyPage(pageInfo);
     }
 
     @Override
     public List<BlogArticle> selectAll(ArticleRequest articleRequest) throws RuntimeException {
-        return articleMapper.select(articleRequest);
+        return articleMapper.selectArticles(articleRequest);
     }
 
     @Override
