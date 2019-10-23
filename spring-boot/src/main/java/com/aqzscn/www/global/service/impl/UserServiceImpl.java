@@ -4,25 +4,33 @@ import com.aqzscn.www.global.component.MailService;
 import com.aqzscn.www.global.domain.co.AppException;
 import com.aqzscn.www.global.domain.co.GlobalCaches;
 import com.aqzscn.www.global.domain.co.GlobalNames;
+import com.aqzscn.www.global.domain.dto.MyPage;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
+import com.aqzscn.www.global.mapper.Role;
 import com.aqzscn.www.global.mapper.User;
 import com.aqzscn.www.global.mapper.UserMapper;
 import com.aqzscn.www.global.service.UserService;
 import com.aqzscn.www.global.component.RedisUtil;
 import com.aqzscn.www.global.util.DateUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -40,6 +48,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final TemplateEngine templateEngine;
     private final RedisUtil redisUtil;
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    @Value("${myoptions.global.user-email-validate}")
+    private Boolean emailValidate;
 
 
     @Autowired
@@ -72,7 +83,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         // 补充及过滤某些信息 防止恶意注册
         user.setId(null);
         user.setLocked(0);
-        user.setEnabled(1);
+        // 判断是否需要自动激活
+        if (this.emailValidate != null && !this.emailValidate) {
+            user.setEnabled(1);
+        } else {
+            user.setEnabled(0);
+        }
         user.setRegTime(new Date());
         // 对密码加密存储
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -93,6 +109,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public MyPage selectUser(User user, Integer page, Integer pageSize) throws RuntimeException {
+        if (page != null && pageSize != null) {
+            PageHelper.startPage(page, pageSize);
+            Page<User> pi = (Page<User>) this.userMapper.selectUser(user);
+            return new MyPage(pi.toPageInfo());
+        } else {
+            MyPage p = new MyPage();
+            List<User> list = this.userMapper.selectUser(user);
+            p.setLst(list);
+            return p;
+        }
+    }
+
+    @Override
     public boolean active(String code, Long id) throws RuntimeException {
         return false;
     }
@@ -107,6 +137,48 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         ReturnVo vo = new ReturnVo();
         vo.setData(user);
         return vo;
+    }
+
+    @Override
+    public boolean updateUser(User user) throws RuntimeException {
+        // 手机号不能重复
+        if (StringUtils.isNotBlank(user.getTel())) {
+            User qUser = new User();
+            qUser.setTel(user.getTel());
+            List<User> users = userMapper.selectUser(qUser);
+            if (!CollectionUtils.isEmpty(users) && !users.get(0).getId().equals(user.getId())) {
+                throw AppException.of("手机号已经存在，请确认！");
+            }
+        }
+        // 如果填写了密码，则对其加密
+        if (StringUtils.isNotBlank(user.getPassword())) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setPassword(encoder.encode(user.getPassword()));
+        }
+        return userMapper.update(user) > 0;
+    }
+
+    @Override
+    public List<Role> selectRoleByUid(Long id) {
+        return userMapper.getRolesByUid(id);
+    }
+
+    @Override
+    public boolean updateRolesByUid(Long uid, String roleName) {
+        // 先根据用户id获取已有角色列表，如果没有该角色则添加，反之删掉
+        List<Role> roleList = userMapper.getRolesByUid(uid);
+        if (!CollectionUtils.isEmpty(roleList)) {
+            for (Role r : roleList) {
+                if (r.getName().equals(roleName)) {
+                    return userMapper.deleteRoles(uid, r.getId()) > 0;
+                }
+            }
+        }
+        // 走到这里表示已有权限中没有指定角色，则添加该角色
+        if (GlobalCaches.ROLES.containsKey(roleName)) {
+            return userMapper.setRoles(uid, GlobalCaches.ROLES.get(roleName)) > 0;
+        }
+        throw AppException.of("角色名不存在！");
     }
 
     /**

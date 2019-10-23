@@ -88,12 +88,11 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/swagger-ui.html").permitAll()
                 .antMatchers("/**/*-files").permitAll()
                 .antMatchers("/wx/msg").permitAll()
-                .antMatchers("/g/dispatch/**").permitAll()
                 .antMatchers("/g/utils/**").permitAll()
                 .antMatchers("/g/token-page").permitAll()
-                .antMatchers("/g/users").hasRole("USER")
-                .antMatchers("/blog/**").access("hasAnyRole('USER', 'ADMIN')")
-                .antMatchers("/g/**").access("hasAnyRole('ADMIN')")
+//                .antMatchers("/g/users").access("hasAnyRole('USER', 'ADMIN')")
+//                .antMatchers("/blog/**").access("hasAnyRole('USER', 'ADMIN')")
+//                .antMatchers("/g/**").access("hasAnyRole('ADMIN')")
                 .anyRequest().authenticated();
     }
 

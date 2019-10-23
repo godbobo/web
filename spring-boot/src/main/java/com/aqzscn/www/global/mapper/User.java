@@ -1,6 +1,8 @@
 package com.aqzscn.www.global.mapper;
 
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
+import com.aqzscn.www.global.config.validation.ValidationGroup2;
+import com.aqzscn.www.global.config.validation.ValidationGroup3;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,12 +32,16 @@ import java.util.List;
 @JsonFilter("UserFilter")
 @Table(name = "g_user")
 public class User implements UserDetails {
+    // Group1 插入时验证
+    // Group2 修改时验证
+    // Group3 修改角色信息时验证
     @Id
     @ApiModelProperty("主键")
+    @NotNull(message = "用户id必须传入", groups = {ValidationGroup2.class, ValidationGroup3.class})
     private Long id;
 
     @ApiModelProperty("姓名")
-    @NotBlank(message = "{user.realName.notblank}", groups = {ValidationGroup1.class})
+//    @NotBlank(message = "{user.realname.notblank}", groups = {ValidationGroup1.class})
     private String realName;
 
     @ApiModelProperty("密码")
@@ -81,9 +87,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role: roles){
-            // 基于数据库的角色认证需要加上 ROLE_ 前缀
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        if (roles != null) {
+            for (Role role: roles){
+                // 基于数据库的角色认证需要加上 ROLE_ 前缀
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+            }
         }
         return authorities;
     }
@@ -101,7 +109,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-        return locked == 0;
+        return locked != null && locked == 0;
     }
 
     /**
@@ -117,7 +125,7 @@ public class User implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return enabled == 1;
+        return enabled != null && enabled == 1;
     }
 
     public Long getId() {
@@ -171,4 +179,6 @@ public class User implements UserDetails {
     public Date getRegTime() {
         return regTime;
     }
+
+
 }

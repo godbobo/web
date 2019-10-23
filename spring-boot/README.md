@@ -14,3 +14,8 @@
 1. 解决插入mysql中文乱码问题
 2. 修复打包后运行时报SpringContextUtil.getBean()为null的错误
 3. 修复转发接口不能转发json字符串的问题
+2. 取消Spring Security配置的角色权限验证
+3. 完善JacksonUtil工具类，使之可以正常转换带有JsonFilter注解的实体类
+4. 完善用户实体类字段，对可能产生空指针的地方做了处理
+5. 用户基础增改查功能完成
+6. 解决博客文章查询失败问题

@@ -45,4 +45,6 @@
   <!--获取在某个连载中排序最高的博文-->
   <select id="selectLastInSeries" resultMap="BaseResultMap">select id, title, series_order from blog_article where series = #{seriesId} order by series_order desc limit 1</select>
   <select id="selectNoSeries" resultMap="BaseResultMap">select id, title, update_time from blog_article where series is null order by id desc</select>
+  <select id="selectArticles" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from blog_article  </select>
 </mapper>

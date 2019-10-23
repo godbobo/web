@@ -2,6 +2,8 @@ package com.aqzscn.www.global.service;
 
 import com.aqzscn.www.global.mapper.Role;
 
+import java.util.List;
+
 /**
  * 角色服务
  * @author Godbobo
@@ -16,5 +18,10 @@ public interface RoleService {
      * @throws RuntimeException 运行时异常
      */
     boolean addRole(Role role) throws RuntimeException;
+
+    /**
+     * 获取全部角色列表
+     */
+    List<Role> selectAllRoles();
 
 }

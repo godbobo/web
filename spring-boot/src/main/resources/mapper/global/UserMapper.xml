@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aqzscn.www.global.mapper.UserMapper">
-  <resultMap id="User_Result" type="com.aqzscn.www.global.mapper.User">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="real_name" jdbcType="VARCHAR" property="realName" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="gender" jdbcType="INTEGER" property="gender" />
-    <result column="tel" jdbcType="VARCHAR" property="tel" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
-    <result column="locked" jdbcType="INTEGER" property="locked" />
-    <result column="enabled" jdbcType="INTEGER" property="enabled" />
-    <result column="reg_time" jdbcType="TIMESTAMP" property="regTime" />
-    <result column="sign" jdbcType="VARCHAR" property="sign" />
-  </resultMap>
-  <sql id="All_Column">
-    id, real_name, password, username, gender, tel, email, head_img, locked, enabled, reg_time, sign
-  </sql>
-  <sql id="Base_Column">
-    id, real_name, username, gender, email, head_img, sign
-  </sql>
-  <update id="update">
-    update g_user set
-    <if test="realName != null">real_name=#{realName}</if>
-    <if test="password != null">password=#{password}</if>
-    <if test="username != null">username=#{username}</if>
-    <if test="gender != null">gender=#{gender}</if>
-    <if test="tel != null">tel=#{tel}</if>
-    <if test="email != null">email=#{email}</if>
-    <if test="headImg != null">head_img=#{headImg}</if>
-    <if test="locked != null">locked=#{locked}</if>
-    <if test="enabled != null">enabled=#{enabled}</if>
-    <if test="regTime != null">reg_time=#{regTime}</if>
-    <if test="sign != null">sign=#{sign}</if>
-    where id=#{id}
-  </update>
-  <select id="loadUserByUsername" resultMap="User_Result">
-    select * from g_user where username = #{username};
-  </select>
-  <!--这种查询方式相当于每条记录对应一个表，感觉会很耗内存，后面有问题的话改一下-->
-  <select id="getRolesByUid" resultType="com.aqzscn.www.global.mapper.Role">
-    select * from g_role a, g_roles_map b where a.id = b.rid and b.uid = #{id}
-  </select>
-  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-    insert into g_user (<include refid="All_Column" />) values (#{id}, #{realName}, #{password}, #{username}, #{gender}, #{tel}, #{email}, #{headImg}, #{locked}, #{enabled}, #{regTime}, #{sign})
-  </insert>
-  <insert id="setRoles">
-    insert into g_roles_map (uid, rid) values (#{uid}, #{rid})
-  </insert>
+    <resultMap id="User_Result" type="com.aqzscn.www.global.mapper.User">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="gender" jdbcType="INTEGER" property="gender"/>
+        <result column="tel" jdbcType="VARCHAR" property="tel"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="head_img" jdbcType="VARCHAR" property="headImg"/>
+        <result column="locked" jdbcType="INTEGER" property="locked"/>
+        <result column="enabled" jdbcType="INTEGER" property="enabled"/>
+        <result column="reg_time" jdbcType="TIMESTAMP" property="regTime"/>
+        <result column="sign" jdbcType="VARCHAR" property="sign"/>
+    </resultMap>
+    <sql id="All_Column">
+        id, real_name, password, username, gender, tel, email, head_img, locked, enabled, reg_time, sign
+    </sql>
+    <sql id="Base_Column">
+        id, real_name, username, gender, email, head_img, sign, tel, enabled, reg_time
+    </sql>
+    <update id="update">
+        update g_user
+        <set>
+            <if test="realName != null and realName != ''">real_name=#{realName},</if>
+            <if test="password != null and password != ''">password=#{password},</if>
+            <if test="username != null and username != ''">username=#{username},</if>
+            <if test="gender != null and gender != ''">gender=#{gender},</if>
+            <if test="tel != null and tel != ''">tel=#{tel},</if>
+            <if test="email != null and email != ''">email=#{email},</if>
+            <if test="headImg != null and headImg != ''">head_img=#{headImg},</if>
+            <if test="locked != null">locked=#{locked},</if>
+            <if test="enabled != null">enabled=#{enabled},</if>
+            <if test="regTime != null">reg_time=#{regTime},</if>
+            <if test="sign != null and sign != ''">sign=#{sign}</if>
+        </set>
+        where id=#{id}
+    </update>
+    <select id="loadUserByUsername" resultMap="User_Result">
+        select *
+        from g_user
+        where username = #{username};
+    </select>
+    <select id="selectUser" resultMap="User_Result" parameterType="com.aqzscn.www.global.mapper.User">
+        select
+        <include refid="Base_Column"/>
+        from g_user where 1=1
+        <if test="id != null">and id=#{id}</if>
+        <if test="email != null and email != ''">and email like concat('%', #{email}, '%')</if>
+        <if test="gender != null">and gender = #{gender}</if>
+        <if test="realName != null and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+        <if test="username != null and username != ''">and username like concat('%', #{username}, '%')</if>
+        <if test="tel != null and tel != ''">and tel = #{tel}</if>
+    </select>
+    <!--这种查询方式相当于每条记录对应一个表，感觉会很耗内存，后面有问题的话改一下-->
+    <select id="getRolesByUid" resultType="com.aqzscn.www.global.mapper.Role">
+        select gr.* from g_roles_map a left join g_role gr on a.rid = gr.id where a.uid = #{id,jdbcType=BIGINT}
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into g_user (<include refid="All_Column"/>) values (#{id}, #{realName}, #{password}, #{username},
+        #{gender}, #{tel}, #{email}, #{headImg}, #{locked}, #{enabled}, #{regTime}, #{sign})
+    </insert>
+    <insert id="setRoles">
+        insert into g_roles_map (uid, rid)
+        values (#{uid}, #{rid})
+    </insert>
+    <delete id="deleteRoles">
+        delete from g_roles_map where uid = #{uid} and rid = #{rid}
+    </delete>
 </mapper>

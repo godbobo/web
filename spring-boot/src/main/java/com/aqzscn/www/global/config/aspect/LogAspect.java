@@ -1,6 +1,7 @@
 package com.aqzscn.www.global.config.aspect;
 
 import com.aqzscn.www.global.util.JacksonUtil;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -43,7 +44,7 @@ public class LogAspect {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = null;
-        if (attributes != null && attributes.getRequest() != null) {
+        if (attributes != null) {
             request = attributes.getRequest();
             String method = request.getMethod();
             String ip = request.getRemoteHost();

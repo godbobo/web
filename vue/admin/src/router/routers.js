@@ -54,6 +54,27 @@ export default [
   blogRouter,
   dispatchRouter,
   {
+    path: '/user',
+    name: 'user',
+    component: Main,
+    meta: {
+      icon: 'md-person',
+      title: '用户管理',
+      hideInBread: true
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'user-list',
+        meta: {
+          icon: 'md-people',
+          title: '用户管理'
+        },
+        component: () => import('@/view/user/list.vue')
+      }
+    ]
+  },
+  {
     path: '/message',
     name: 'message',
     component: Main,
