@@ -6,9 +6,9 @@ spring:
     host: smtp.qq.com
     port: 587
     # 邮箱账号
-    username: xxx@qq.com
+    username: 980742324@qq.com
     # 授权码，不是密码。。
-    password: inputYourCode
+    password: mtdomlplzqkzbbce
     properties:
       mail:
         smtp:
@@ -16,10 +16,25 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
         debug: true
   datasource:
-    schema: classpath:datasource/schema.sql
+    schema:
+      - classpath:datasource/tables/g_param.sql
+      - classpath:datasource/tables/g_dict.sql
+      - classpath:datasource/tables/g_user.sql
+      - classpath:datasource/tables/g_role.sql
+      - classpath:datasource/tables/g_roles_map.sql
+      - classpath:datasource/tables/g_dispatch.sql
+      - classpath:datasource/tables/g_mock.sql
+      - classpath:datasource/tables/g_resource.sql
+      - classpath:datasource/tables/blog_article.sql
+      - classpath:datasource/tables/blog_series.sql
+      - classpath:datasource/tables/blog_tag.sql
+      - classpath:datasource/tables/blog_tags_map.sql
+      - classpath:datasource/tables/mv_platform.sql
+      - classpath:datasource/tables/mv_post.sql
     data: classpath:datasource/data.sql
     separator: $$
     continue-on-error: true
+    initialization-mode: always
   redis:
     keyPrefix:
       all: "com.aqzscn.web:"
@@ -33,10 +48,7 @@ spring:
 server:
   servlet:
     context-path: /api
-#  ssl:
-#    key-store: bobo.p12
-#    key-alias: bobossl
-#    key-store-password: songyanan521
+  port: 8520
 # pageHelper配置
 pagehelper:
   #  dialect: mysql 高版本可以自动识别，不需要配置方言，否则会报错
@@ -47,10 +59,11 @@ mybatis:
   mapper-locations:
     - classpath:mapper/blog/*.xml
     - classpath:mapper/global/*.xml
+    - classpath:mapper/movie/*.xml
 mail:
   # 配置邮箱发送者的信息
   fromMail:
-    addr: xxx@qq.com
+    addr: 980742324@qq.com
 myoptions:
   weixin:
     hitokoto:

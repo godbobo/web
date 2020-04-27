@@ -1,5 +1,8 @@
 package com.aqzscn.www.weixin.controller;
 
+import com.aqzscn.www.global.domain.co.AppException;
+import com.aqzscn.www.global.domain.co.GlobalCaches;
+import com.aqzscn.www.weixin.domain.co.WeChatNames;
 import com.aqzscn.www.weixin.service.WeixinService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -8,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import weixin.popular.bean.message.EventMessage;
 import weixin.popular.bean.xmlmessage.XMLMessage;
@@ -28,15 +30,6 @@ import java.io.IOException;
 public class WeixinController {
 
     private final Logger logger = LoggerFactory.getLogger(WeixinController.class);
-
-    @Value("${myoptions.weixin.mytoken}")
-    private String token;
-
-//    @Value("${myoptions.weixin.appid}")
-//    private String appId;
-//
-//    @Value("${myoptions.weixin.appsecret}")
-//    private String appSecret;
 
     private static final long serialVersionUID = 1L;
 
@@ -67,6 +60,10 @@ public class WeixinController {
             return echostr;
         }
         //验证请求签名
+        String token = GlobalCaches.PARAMS.get(WeChatNames.P_TOKEN);
+        if (StringUtils.isBlank(token)) {
+            throw AppException.of("未配置微信token，无法进行验证");
+        }
         if (!signature.equals(SignatureUtil.generateEventMessageSignature(token, timestamp, nonce))) {
             this.logger.info("The request signature is invalid");
             return null;
@@ -91,6 +88,10 @@ public class WeixinController {
         }
 
         //验证请求签名
+        String token = GlobalCaches.PARAMS.get(WeChatNames.P_TOKEN);
+        if (StringUtils.isBlank(token)) {
+            throw AppException.of("未配置微信token，无法进行验证");
+        }
         if (!signature.equals(SignatureUtil.generateEventMessageSignature(token, timestamp, nonce))) {
             this.logger.info("The request signature is invalid");
             return null;

@@ -13,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,12 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/g")
 public class DispatchController extends BaseController {
 
-    private final RestTemplate restTemplate;
     private DispatchService dispatchService;
 
-    public DispatchController(HttpServletRequest request, HttpServletResponse response, RestTemplate restTemplate, DispatchService dispatchService) {
+    public DispatchController(HttpServletRequest request, HttpServletResponse response, DispatchService dispatchService) {
         super(request, response);
-        this.restTemplate = restTemplate;
         this.dispatchService = dispatchService;
     }
 

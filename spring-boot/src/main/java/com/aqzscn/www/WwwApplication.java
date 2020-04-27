@@ -20,7 +20,7 @@ import java.util.List;
  * @author Godbobo
  * @date 2019/5/26
  */
-@MapperScan(basePackages = {"com.aqzscn.www.blog.mapper", "com.aqzscn.www.global.mapper"})
+@MapperScan(basePackages = {"com.aqzscn.www.blog.mapper", "com.aqzscn.www.global.mapper", "com.aqzscn.www.movie.mapper"})
 @SpringBootApplication
 @EnableScheduling
 public class WwwApplication extends WebMvcConfigurationSupport {

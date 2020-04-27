@@ -1,7 +1,7 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/bobo?serverTimezone=UTC&useUnicode=yes&characterEncoding=utf8
+    url: jdbc:mysql://localhost:3306/web?serverTimezone=UTC&useUnicode=yes&characterEncoding=utf8
     username: root
     password: root
   redis:
@@ -14,10 +14,6 @@ logging:
     com:
       aqzscn:
         www: info
-server:
-  port: 521
-#  ssl:
-#    enabled: false
 myfile:
   export: ${user.home}\mydebug\web\export
   upload: D:\Environment\nginx-1.15.9\html\static\upload
@@ -25,14 +21,10 @@ myoptions:
   series:
     defaultimg: https://file.iviewui.com/asd/asd-u-10.png
   weixin:
-    enable: true
-    # 微信公众号配置信息
-    appid: wxAppId
-    appsecret: inputYourAppSecret
-    mytoken: inputYourToken
+    enable: false
   service:
     # 启动时的请求路径
-    url: http://127.0.0.1:521
+    url: http://127.0.0.1:8520
 #    org:
 #      springframework:
 #        security: debug

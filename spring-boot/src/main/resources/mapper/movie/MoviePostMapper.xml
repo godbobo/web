@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.movie.mapper.MoviePostMapper">
+
+    <resultMap id="baseResultMap" type="com.aqzscn.www.movie.mapper.MoviePost">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="mtime_id" jdbcType="VARCHAR" property="mtimeId" />
+        <result column="movie_cn_name" jdbcType="VARCHAR" property="movieCnName" />
+        <result column="movie_en_name" jdbcType="VARCHAR" property="movieEnName" />
+        <result column="genre" jdbcType="VARCHAR" property="genre" />
+        <result column="intro" jdbcType="VARCHAR" property="intro" />
+        <result column="cover" jdbcType="VARCHAR" property="cover" />
+        <result column="movie_time" jdbcType="VARCHAR" property="movieTime" />
+        <result column="date" jdbcType="TIMESTAMP" property="date" />
+        <result column="director" jdbcType="VARCHAR" property="director" />
+        <result column="star" jdbcType="VARCHAR" property="star" />
+        <result column="point" jdbcType="VARCHAR" property="point" />
+        <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
+        <result column="comment_list" jdbcType="VARCHAR" property="commentList" />
+        <result column="platforms" jdbcType="VARCHAR" property="platforms" />
+    </resultMap>
+
+    <select id="selectAllMovieId" resultMap="baseResultMap">
+        select id, mtime_id from mv_post
+    </select>
+
+    <update id="updateMoviePostById" parameterType="com.aqzscn.www.movie.mapper.MoviePost">
+        update mv_post
+            <set>
+                <if test="movieCnName != null and movieCnName != ''">movie_cn_name = #{movieCnName},</if>
+                <if test="movieEnName != null and movieEnName != ''">movie_en_name = #{movieEnName},</if>
+                <if test="genre != null and genre != ''">genre = #{genre},</if>
+                <if test="intro != null and intro != ''">intro = #{intro},</if>
+                <if test="cover != null and cover != ''">cover = #{cover},</if>
+                <if test="movieTime != null and movieTime != ''">movie_time = #{movieTime},</if>
+                <if test="date != null">date = #{date},</if>
+                <if test="director != null and director != ''">director = #{director},</if>
+                <if test="star != null and star != ''">star = #{star},</if>
+                <if test="point != null and point != ''">point = #{point},</if>
+                <if test="totalNum != null and totalNum != ''">total_num = #{totalNum},</if>
+                <if test="commentList != null and commentList != ''">comment_list = #{commentList},</if>
+                <if test="platforms != null and platforms != ''">platforms = #{platforms}</if>
+            </set>
+        <where>
+            mtime_id = #{mtimeId}
+        </where>
+    </update>
+
+</mapper>

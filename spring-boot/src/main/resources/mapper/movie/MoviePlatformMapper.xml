@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aqzscn.www.movie.mapper.MoviePlatformMapper">
+
+    <resultMap id="baseResultMap" type="com.aqzscn.www.movie.mapper.MoviePlatform">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="movie_id" jdbcType="BIGINT" property="movieId" />
+        <result column="m_url" jdbcType="VARCHAR" property="mUrl" />
+        <result column="pc_url" jdbcType="VARCHAR" property="pcUrl" />
+    </resultMap>
+
+</mapper>
