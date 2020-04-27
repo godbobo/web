@@ -21,7 +21,7 @@ myoptions:
   series:
     defaultimg: https://file.iviewui.com/asd/asd-u-10.png
   weixin:
-    enable: false
+    enable: true
   service:
     # 启动时的请求路径
     url: http://127.0.0.1:8520
