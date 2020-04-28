@@ -47,8 +47,8 @@
         <FormItem v-show="optType === 'add'" label="密码" prop="password">
           <Input v-model="userForm.password" type="password" placeholder="请输入密码" />
         </FormItem>
-        <FormItem label="昵称" prop="username">
-          <Input v-model="userForm.username" placeholder="请输入昵称" />
+        <FormItem label="用户名" prop="username">
+          <Input v-model="userForm.username" placeholder="请输入用户名" />
         </FormItem>
         <FormItem label="姓名">
           <Input v-model="userForm.realName" placeholder="请输入真实姓名" />
@@ -115,7 +115,7 @@ const uColumns = [
     align: 'center'
   },
   {
-    title: '昵称',
+    title: '用户名',
     key: 'username'
   },
   {
