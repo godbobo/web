@@ -14,4 +14,7 @@ public class GlobalNames {
     public static final String MAIL_CODE = "MAIL_CODE_";
     public static final String CAN_SEND_MAIL = "CAN_SEND_MAIL_";
 
+    public static final String DEV_PROFILE = "dev";
+    public static final String PROD_PROFILE = "prod";
+
 }

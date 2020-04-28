@@ -1,8 +1,10 @@
 package com.aqzscn.www.global.controller;
 
+import com.aqzscn.www.global.component.SpringContextUtil;
 import com.aqzscn.www.global.config.validation.ValidationGroup1;
 import com.aqzscn.www.global.config.validation.ValidationGroup3;
 import com.aqzscn.www.global.domain.co.AppException;
+import com.aqzscn.www.global.domain.co.GlobalNames;
 import com.aqzscn.www.global.domain.dto.PageRequest;
 import com.aqzscn.www.global.domain.dto.ReturnError;
 import com.aqzscn.www.global.domain.dto.ReturnVo;
@@ -17,10 +19,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -135,6 +139,24 @@ public class UserController extends BaseController {
             throw AppException.of(result.getAllErrors());
         }
         return response(userService.updateRolesByUid(userRequest.getId(), userRequest.getRoleName()));
+    }
+
+    @GetMapping("/user/crypt-pwd")
+    @ApiOperation(value = "获取加密后的密码", notes = "作用是开发时根据已知密码获取加密后的密码，方便添加到用户信息中")
+    public ReturnVo getCryptPassword(String pwd) throws RuntimeException {
+        if (StringUtils.isBlank(pwd)) {
+            throw AppException.of(ReturnError.VALIDATE_FAILED, "原始密码不能为空");
+        }
+        // 非开发环境禁止使用该接口
+        if (!GlobalNames.DEV_PROFILE.equals(SpringContextUtil.getActiveProfile())) {
+            throw AppException.of(ReturnError.FORBIDDEN, "禁止访问");
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        ReturnVo vo = new ReturnVo();
+        Map<String, Object> res = new HashMap<>(1);
+        res.put("password", encoder.encode(pwd));
+        vo.setData(res);
+        return vo;
     }
 
 }

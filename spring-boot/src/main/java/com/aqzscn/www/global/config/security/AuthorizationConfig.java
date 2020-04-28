@@ -105,14 +105,15 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         // 4 配置token过期时间 access_token半小时 refresh_token7天
         // 5 配置资源id
         // 6 配置密钥
+        // 客户端的请求头格式为：Authorization:Basic {clientId:secret} 其中中括号中间的内容需要使用base64加密
         clients.inMemory()
-                .withClient("password")
+                .withClient("adminClient")
+                .secret(passwordEncoder().encode("1a2b3c"))
+                .scopes("all")
+                .resourceIds("admin")
                 .authorizedGrantTypes("password", "refresh_token")
                 .accessTokenValiditySeconds(1800)
-                .refreshTokenValiditySeconds(604800)
-                .resourceIds("rid")
-                .scopes("all")
-                .secret(passwordEncoder().encode("123"));
+                .refreshTokenValiditySeconds(604800);
     }
 
 

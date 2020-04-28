@@ -35,7 +35,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         // 和授权服务配置中的资源id保持一致 并设置资源仅基于令牌认证
-        resources.resourceId("rid").stateless(true);
+        resources.resourceId("admin").stateless(true);
         // 设置自己的异常处理类
         resources.authenticationEntryPoint((httpServletRequest, httpServletResponse, e) -> {
             // 在这里处理用户没有授权信息或者授权信息错误的情况
@@ -90,6 +90,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/wx/msg").permitAll()
                 .antMatchers("/g/utils/**").permitAll()
                 .antMatchers("/g/token-page").permitAll()
+                .antMatchers("/g/user/crypt-pwd").permitAll()
 //                .antMatchers("/g/users").access("hasAnyRole('USER', 'ADMIN')")
 //                .antMatchers("/blog/**").access("hasAnyRole('USER', 'ADMIN')")
 //                .antMatchers("/g/**").access("hasAnyRole('ADMIN')")
