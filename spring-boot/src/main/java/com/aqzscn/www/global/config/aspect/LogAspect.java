@@ -28,8 +28,6 @@ import java.util.UUID;
 @Component
 public class LogAspect {
 
-//    private final Logger logger = LoggerFactory.getLogger(LogAspect.class);
-
     private final JacksonUtil jacksonUtil = new JacksonUtil();
 
     @Pointcut("execution(public * com.aqzscn.www.global.controller..*.*(..)) || execution(public * com.aqzscn.www.blog.controller..*.*(..)) || execution(public * com.aqzscn.www.weixin.controller..*.*(..))")
